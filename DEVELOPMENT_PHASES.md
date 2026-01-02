@@ -23,9 +23,9 @@ Svaki task je označen sa:
 **Dependencies:** None  
 **Assignee:** _____________
 
-- [ ] Kreirati Git repository
-- [ ] Definisati `.gitignore` za Python i Node.js
-- [ ] Kreirati osnovnu folder strukturu:
+- [x] Kreirati Git repository
+- [x] Definisati `.gitignore` za Python i Node.js
+- [x] Kreirati osnovnu folder strukturu:
   ```
   /
   ├── backend/
@@ -35,8 +35,8 @@ Svaki task je označen sa:
   ├── scripts/
   └── .github/workflows/
   ```
-- [ ] Kreirati `README.md` sa osnovnim uputstvima
-- [ ] Kreirati `CONTRIBUTING.md`
+- [x] Kreirati `README.md` sa osnovnim uputstvima
+- [x] Kreirati `CONTRIBUTING.md`
 
 #### 0.2 [SEQ] Backend Project Initialization
 **Estimated:** 3h  
