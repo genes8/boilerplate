@@ -95,18 +95,53 @@ pnpm dev
 
 ### 5. Infrastructure Services (Local Development)
 
-Make sure PostgreSQL and Redis are running locally:
+#### Option 1: Docker (Recommended)
+
+Use Docker Compose for all infrastructure services:
 
 ```bash
-# PostgreSQL (default port 5432)
-# Redis (default port 6379)
-```
-
-Or use Docker for infrastructure only:
-
-```bash
+# Start all services (PostgreSQL, Redis, pgAdmin)
 docker-compose -f docker-compose.dev.yml up -d
+
+# Start with pgAdmin (optional development tool)
+docker-compose -f docker-compose.dev.yml --profile tools up -d
+
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop services
+docker-compose -f docker-compose.dev.yml down
 ```
+
+#### Option 2: Local Installation
+
+If you prefer to run services locally:
+
+```bash
+# PostgreSQL 16 (default port 5432)
+# Redis 7 (default port 6379)
+```
+
+#### Service Access
+
+- **PostgreSQL**: `localhost:5432`
+- **Redis**: `localhost:6379`
+- **pgAdmin**: `http://localhost:5050` (when using `--profile tools`)
+
+#### Database Connection
+
+After starting services, the database will be available with:
+- Host: `localhost`
+- Port: `5432`
+- Database: `appdb`
+- User: `appuser`
+- Password: `secure_password_here` (from .env)
+
+The database is automatically initialized with required extensions:
+- `uuid-ossp` - UUID generation
+- `pg_trgm` - Fuzzy text search
+- `unaccent` - Text normalization
+- `pgvector` - Vector embeddings for AI features
 
 ## Environment Variables
 

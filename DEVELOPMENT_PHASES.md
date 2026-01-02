@@ -114,16 +114,16 @@ Svaki task je označen sa:
 **Dependencies:** 0.2, 0.3  
 **Assignee:** _____________
 
-- [ ] Kreirati `docker-compose.dev.yml`:
+- [x] Kreirati `docker-compose.dev.yml`:
   - PostgreSQL 16 container
   - Redis 7 container
   - pgAdmin (optional, za development)
-- [ ] Kreirati `docker/postgres/init.sql` za inicijalne extensions:
+- [x] Kreirati `docker/postgres/init.sql` za inicijalne extensions:
   - pg_trgm
   - unaccent
   - pgvector
-- [ ] Kreirati `.env.example` sa svim potrebnim varijablama
-- [ ] Dokumentovati lokalni setup u README
+- [x] Kreirati `.env.example` sa svim potrebnim varijablama
+- [x] Dokumentovati lokalni setup u README
 
 #### 0.5 [PAR] Database Connection & Alembic Setup
 **Estimated:** 2h  

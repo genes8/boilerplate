@@ -36,6 +36,44 @@ All notable changes to this project will be documented in this file.
 - [x] Task 0.1 - Repository & Project Structure Setup (COMPLETED)
 - [x] Task 0.2 - Backend Project Initialization (COMPLETED)
 - [x] Task 0.3 - Frontend Project Initialization (COMPLETED)
+- [x] Task 0.4 - Docker Development Environment (COMPLETED)
+
+---
+
+## [1.6.0] - 2026-01-02
+
+### Added - Phase 0.4: Docker Development Environment
+
+- **Docker Compose Configuration** - Kompletna development infrastruktura:
+  - `docker-compose.dev.yml` sa PostgreSQL 16, Redis 7, i pgAdmin
+  - Health checks za sve servise
+  - Persistent volumes za data
+  - Custom network za komunikaciju
+  - pgAdmin kao optional tool (sa `--profile tools`)
+- **PostgreSQL Setup** - Enterprise-ready database:
+  - `docker/postgres/init.sql` sa svim potrebnim extensions
+  - uuid-ossp (UUID generation)
+  - pg_trgm (fuzzy text search)
+  - unaccent (text normalization)
+  - pgvector (AI embeddings)
+  - Custom normalize_text() funkcija
+- **Redis Configuration** - High-performance caching:
+  - Redis 7 sa persistence
+  - Memory management (256MB limit)
+  - LRU eviction policy
+  - Optional password authentication
+- **Environment Variables** - Sve potrebne konfiguracije:
+  - Dodate Redis varijable u `.env.example`
+  - Dodate pgAdmin varijable za development tools
+  - Port konfiguracije za sve servise
+- **Documentation** - Kompletna setup dokumentacija:
+  - Ažuriran README.md sa detaljnim Docker uputstvima
+  - Service access informacije
+  - Database connection detalji
+  - Extensions lista i objašnjenja
+
+### Task Status
+- [x] Task 0.4 - Docker Development Environment (COMPLETED)
 
 ---
 
