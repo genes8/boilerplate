@@ -43,9 +43,9 @@ Svaki task je označen sa:
 **Dependencies:** 0.1  
 **Assignee:** _____________
 
-- [ ] Inicijalizirati Python projekat sa `pyproject.toml`
-- [ ] Postaviti Poetry za dependency management
-- [ ] Kreirati `backend/app/` strukturu:
+- [x] Inicijalizirati Python projekat sa `pyproject.toml`
+- [x] Postaviti Poetry za dependency management
+- [x] Kreirati `backend/app/` strukturu:
   ```
   backend/
   ├── app/
@@ -64,7 +64,7 @@ Svaki task je označen sa:
   ├── pyproject.toml
   └── poetry.lock
   ```
-- [ ] Instalirati core dependencies:
+- [x] Instalirati core dependencies:
   - fastapi
   - uvicorn
   - sqlalchemy[asyncio]
@@ -73,8 +73,8 @@ Svaki task je označen sa:
   - pydantic-settings
   - alembic
   - redis
-- [ ] Kreirati bazni `config.py` sa Pydantic Settings
-- [ ] Kreirati `main.py` sa FastAPI app instance
+- [x] Kreirati bazni `config.py` sa Pydantic Settings
+- [x] Kreirati `main.py` sa FastAPI app instance
 
 #### 0.3 [SEQ] Frontend Project Initialization
 **Estimated:** 3h  

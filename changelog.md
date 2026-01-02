@@ -34,6 +34,37 @@ All notable changes to this project will be documented in this file.
 
 ### Task Status
 - [x] Task 0.1 - Repository & Project Structure Setup (COMPLETED)
+- [x] Task 0.2 - Backend Project Initialization (COMPLETED)
+
+---
+
+## [1.4.0] - 2026-01-02
+
+### Added - Phase 0.2: Backend Project Initialization
+
+- **Python Project Setup** - Kompletna backend struktura:
+  - `pyproject.toml` sa svim core dependencies (FastAPI, SQLAlchemy, Pydantic, etc.)
+  - Poetry za dependency management sa development tools (pytest, black, ruff, mypy)
+  - Virtual environment sa `backend/venv/`
+- **Backend Application Structure** - FastAPI aplikacija:
+  - `app/main.py` - FastAPI app instance sa CORS middleware
+  - `app/config.py` - Pydantic Settings sa svim environment varijablama
+  - Kompletna folder struktura (api/v1/, core/, models/, schemas/, services/, utils/)
+  - Health check endpoints (`/health`, `/`)
+- **Development Tools** - Code quality i testing:
+  - Black formatter (line length: 88)
+  - Ruff linter sa comprehensive rules
+  - mypy type checker sa strict mode
+  - pytest sa asyncio support
+  - isort za import sorting
+- **Configuration** - Comprehensive settings:
+  - Database, Redis, Security (JWT)
+  - CORS, S3, Watch Folders, AI/OpenRouter
+  - OIDC/SSO, Monitoring, Document Processing
+  - Environment-specific properties (is_development, is_production)
+
+### Task Status
+- [x] Task 0.2 - Backend Project Initialization (COMPLETED)
 
 ---
 
