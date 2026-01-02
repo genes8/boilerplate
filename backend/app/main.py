@@ -1,12 +1,16 @@
 """FastAPI application main entry point."""
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 
+from app.api.test_redis import router as test_redis_router
 from app.config import settings
+from app.core.database import close_db, engine
+from app.core.redis import close_redis, init_redis
 
 
 @asynccontextmanager
@@ -16,18 +20,30 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     print("🚀 Starting Enterprise Boilerplate Backend...")
     print(f"📊 Environment: {settings.ENVIRONMENT}")
     print(f"🔧 Debug mode: {settings.DEBUG}")
-    
-    # TODO: Initialize database connection
-    # TODO: Initialize Redis connection
-    # TODO: Run database migrations
+
+    # Test database connection
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        print("✅ Database connection: OK")
+    except Exception as e:
+        print(f"❌ Database connection failed: {e}")
+
+    # Initialize Redis connection
+    try:
+        await init_redis()
+    except Exception as e:
+        print(f"❌ Redis initialization failed: {e}")
+
     # TODO: Create super admin if needed
-    
+
     yield
-    
+
     # Shutdown
     print("🛑 Shutting down Enterprise Boilerplate Backend...")
-    # TODO: Close database connections
-    # TODO: Close Redis connections
+    await close_db()
+    await close_redis()
+    print("✅ Database and Redis connections closed")
 
 
 def create_application() -> FastAPI:
@@ -50,7 +66,10 @@ def create_application() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # TODO: Add routers
+    # Add test routers
+    app.include_router(test_redis_router)
+
+    # TODO: Add production routers
     # app.include_router(api_v1_router, prefix="/api/v1")
 
     # Health check endpoint

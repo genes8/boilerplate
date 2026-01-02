@@ -4,6 +4,121 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.9.0] - 2026-01-02
+
+### Added - Phase 0.7: CI/CD Pipeline - Basic
+
+- **GitHub Actions CI** - Kompletnan CI pipeline:
+  - `.github/workflows/ci.yml` sa backend i frontend jobovima
+  - PostgreSQL i Redis services za testiranje
+  - Ruff linting i formatting za Python
+  - MyPy type checking za Python
+  - ESLint i Prettier za TypeScript/JavaScript
+  - Unit tests sa coverage reporting
+  - Security scanning sa Trivy
+  - Docker image building i testing
+- **Makefile** - 40+ development komandi:
+  - `make dev-setup` - kompletna postavka okruženja
+  - `make lint` - linting za backend/frontend
+  - `make test` - unit tests sa coverage
+  - `make docker-up/down` - Docker management
+  - `make db-*` - database migracije i testiranje
+  - `make clean` - cleanup utilities
+- **Pre-commit Hooks** - Automatski code quality:
+  - Ruff (lint + format) za Python
+  - MyPy type checking
+  - Black formatting
+  - ESLint/Prettier za frontend
+  - YAML/JSON/Markdown linting
+  - Security scanning (Bandit, Safety)
+  - Docker file linting (Hadolint)
+- **Development Tools** - Additional dependencies:
+  - `safety` - dependency vulnerability scanning
+  - `bandit` - security linting
+  - `pip-audit` - audit installed packages
+- **Code Quality** - Standardizovani workflow:
+  - Automatsko formatiranje na svakom commit-u
+  - Type checking pre push-a
+  - Security scanning u CI/CD
+  - Coverage reporting na Codecov
+
+### Task Status
+- [x] Task 0.7 - CI/CD Pipeline - Basic (COMPLETED)
+
+---
+
+## [1.8.0] - 2026-01-02
+
+### Added - Phase 0.6: Redis Connection Setup
+
+- **Redis Connection Pool** - Kompletna Redis integracija:
+  - `app/core/redis.py` sa async connection pool (max_connections=20)
+  - Connection health check svakih 30 sekundi
+  - Retry on timeout sa socket timeout od 5 sekundi
+  - `get_redis()` dependency za FastAPI injection
+- **RedisCache Class** - High-level cache operations:
+  - String, JSON, numeric operations (increment/decrement)
+  - TTL management, key existence checks
+  - Pattern-based key deletion (`delete_pattern`)
+  - JSON serialization/deserialization automatski
+- **Cache Key Utilities** - Organizovani cache keys:
+  - `cache_key()` - generički key builder
+  - `session_cache_key()` - session-specifični keys
+  - `user_cache_key()` - user-specifični keys
+  - `generate_session_id()` - UUID-based session IDs
+- **Application Lifecycle** - Redis integration:
+  - `init_redis()` test konekcije na startup
+  - `close_redis()` pravilno gašenje konekcija
+  - Status logging za Redis konekciju
+- **Test Endpoints** - `/test/redis/*` API endpoints:
+  - Ping, GET/SET/DELETE cache operations
+  - JSON cache operations
+  - Session management endpoints
+  - Key listing sa pattern matching
+- **Test Script** - `scripts/test_redis_connection.py` za verifikaciju
+- **Docker Integration** - Redis radi na portu 6380 (zbog konflikta)
+
+### Task Status
+- [x] Task 0.6 - Redis Connection Setup (COMPLETED)
+
+---
+
+## [1.7.0] - 2026-01-02
+
+### Added - Phase 0.5: Database Connection & Alembic Setup
+
+- **SQLAlchemy Async Engine** - Kompletna database konfiguracija:
+  - `app/core/database.py` sa async engine i session management
+  - Connection pooling (pool_size=10, max_overflow=20)
+  - Pool pre-ping za connection validation
+  - Pool recycle nakon 1 sata
+  - `get_db` dependency za FastAPI injection
+  - `DbSession` type alias za čistiji kod
+  - `init_db()` i `close_db()` lifecycle funkcije
+- **Base Model Classes** - Reusable model mixins:
+  - `app/models/base.py` sa BaseModel, UUIDMixin, TimestampMixin
+  - UUID primary key (auto-generated)
+  - `created_at` i `updated_at` timestamps (server-side defaults)
+  - `to_dict()` helper metoda
+- **Alembic Setup** - Async migration support:
+  - Inicijalizovan Alembic sa `alembic init`
+  - `alembic/env.py` konfigurisan za async SQLAlchemy
+  - Koristi `create_async_engine` sa asyncpg driver
+  - `compare_type=True` i `compare_server_default=True` za preciznije migracije
+  - Auto-import modela za autogenerate support
+- **Application Lifecycle** - Database integration:
+  - Ažuriran `main.py` sa database connection test na startup
+  - Proper shutdown sa `close_db()` 
+  - Status logging za database konekciju
+- **Dependencies** - Dodat psycopg2-binary za Alembic kompatibilnost
+- **Test Script** - `scripts/test_db_connection.py` za verifikaciju konekcije
+- **Environment** - `backend/.env` kreiran sa development konfiguracijom
+
+### Task Status
+- [x] Task 0.5 - Database Connection & Alembic Setup (COMPLETED)
+
+---
+
 ## [1.3.0] - 2026-01-02
 
 ### Added - Phase 0.1: Repository & Project Structure Setup

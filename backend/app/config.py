@@ -1,7 +1,5 @@
 """Application configuration using Pydantic Settings."""
 
-from typing import Any, Dict, Optional
-
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -16,7 +14,9 @@ class Settings(BaseSettings):
     )
 
     # Application
-    ENVIRONMENT: str = Field(default="development", description="Application environment")
+    ENVIRONMENT: str = Field(
+        default="development", description="Application environment"
+    )
     DEBUG: bool = Field(default=False, description="Debug mode")
 
     # Database
@@ -46,11 +46,11 @@ class Settings(BaseSettings):
     )
 
     # Super Admin
-    SUPERADMIN_EMAIL: Optional[str] = Field(
+    SUPERADMIN_EMAIL: str | None = Field(
         default=None,
         description="Initial super admin email",
     )
-    SUPERADMIN_PASSWORD: Optional[str] = Field(
+    SUPERADMIN_PASSWORD: str | None = Field(
         default=None,
         description="Initial super admin password (auto-generated if empty)",
     )
@@ -62,15 +62,15 @@ class Settings(BaseSettings):
     )
 
     # File Storage (S3-Compatible)
-    S3_ENDPOINT_URL: Optional[str] = Field(
+    S3_ENDPOINT_URL: str | None = Field(
         default=None,
         description="S3-compatible storage endpoint URL",
     )
-    S3_ACCESS_KEY: Optional[str] = Field(
+    S3_ACCESS_KEY: str | None = Field(
         default=None,
         description="S3 access key",
     )
-    S3_SECRET_KEY: Optional[str] = Field(
+    S3_SECRET_KEY: str | None = Field(
         default=None,
         description="S3 secret key",
     )
@@ -102,7 +102,7 @@ class Settings(BaseSettings):
     )
 
     # AI / OpenRouter
-    OPENROUTER_API_KEY: Optional[str] = Field(
+    OPENROUTER_API_KEY: str | None = Field(
         default=None,
         description="OpenRouter API key for AI features",
     )
@@ -116,25 +116,25 @@ class Settings(BaseSettings):
         default=False,
         description="Enable OIDC authentication",
     )
-    OIDC_ISSUER_URL: Optional[str] = Field(
+    OIDC_ISSUER_URL: str | None = Field(
         default=None,
         description="OIDC issuer URL",
     )
-    OIDC_CLIENT_ID: Optional[str] = Field(
+    OIDC_CLIENT_ID: str | None = Field(
         default=None,
         description="OIDC client ID",
     )
-    OIDC_CLIENT_SECRET: Optional[str] = Field(
+    OIDC_CLIENT_SECRET: str | None = Field(
         default=None,
         description="OIDC client secret",
     )
-    OIDC_REDIRECT_URI: Optional[str] = Field(
+    OIDC_REDIRECT_URI: str | None = Field(
         default=None,
         description="OIDC redirect URI",
     )
 
     # Monitoring
-    SENTRY_DSN: Optional[str] = Field(
+    SENTRY_DSN: str | None = Field(
         default=None,
         description="Sentry DSN for error tracking",
     )
@@ -149,7 +149,19 @@ class Settings(BaseSettings):
         description="Thumbnail height in pixels",
     )
     SUPPORTED_FORMATS: list[str] = Field(
-        default=["pdf", "docx", "doc", "txt", "png", "jpg", "jpeg", "gif", "xlsx", "xls", "csv"],
+        default=[
+            "pdf",
+            "docx",
+            "doc",
+            "txt",
+            "png",
+            "jpg",
+            "jpeg",
+            "gif",
+            "xlsx",
+            "xls",
+            "csv",
+        ],
         description="Supported document formats",
     )
 
@@ -159,7 +171,7 @@ class Settings(BaseSettings):
         """Parse CORS origins from string or list."""
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+        elif isinstance(v, list | str):
             return v
         raise ValueError(v)
 
@@ -169,7 +181,7 @@ class Settings(BaseSettings):
         """Parse watch folder paths from string or list."""
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+        elif isinstance(v, list | str):
             return v
         raise ValueError(v)
 
@@ -179,7 +191,7 @@ class Settings(BaseSettings):
         """Parse supported formats from string or list."""
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+        elif isinstance(v, list | str):
             return v
         raise ValueError(v)
 
@@ -223,4 +235,7 @@ class Settings(BaseSettings):
 
 
 # Global settings instance
-settings = Settings()
+settings = Settings(
+    DATABASE_URL="postgresql+asyncpg://appuser:secure_password_here@localhost:5433/appdb",
+    JWT_SECRET="your_256_bit_secret_key_minimum_32_characters"
+)

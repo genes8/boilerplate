@@ -130,36 +130,36 @@ Svaki task je označen sa:
 **Dependencies:** 0.2, 0.4  
 **Assignee:** _____________
 
-- [ ] Konfigurisati SQLAlchemy async engine
-- [ ] Kreirati `database.py` sa session management
-- [ ] Inicijalizirati Alembic:
+- [x] Konfigurisati SQLAlchemy async engine
+- [x] Kreirati `database.py` sa session management
+- [x] Inicijalizirati Alembic:
   - `alembic init alembic`
   - Konfigurisati `alembic.ini`
   - Konfigurisati `env.py` za async
-- [ ] Kreirati `Base` model klasu
-- [ ] Testirati konekciju na bazu
+- [x] Kreirati `Base` model klasu
+- [x] Testirati konekciju na bazu
 
 #### 0.6 [PAR] Redis Connection Setup
 **Estimated:** 1h  
 **Dependencies:** 0.2, 0.4  
 **Assignee:** _____________
 
-- [ ] Kreirati `redis.py` sa connection pool
-- [ ] Implementirati dependency za Redis client
-- [ ] Kreirati utility funkcije za cache operations
-- [ ] Testirati konekciju na Redis
+- [x] Kreirati `redis.py` sa connection pool
+- [x] Implementirati dependency za Redis client
+- [x] Kreirati utility funkcije za cache operations
+- [x] Testirati konekciju na Redis
 
 #### 0.7 [SEQ] CI/CD Pipeline - Basic
 **Estimated:** 2h  
 **Dependencies:** 0.2, 0.3  
 **Assignee:** _____________
 
-- [ ] Kreirati `.github/workflows/ci.yml`:
-  - Lint check (ruff za Python, eslint za TS)
+- [x] Kreirati `.github/workflows/ci.yml`:
+  - Lint check (ruff za Python, eslint i Prettier za TS)
   - Type check (mypy, tsc)
   - Unit tests
-- [ ] Kreirati `Makefile` sa common commands
-- [ ] Postaviti pre-commit hooks
+- [x] Kreirati `Makefile` sa common commands
+- [x] Postaviti pre-commit hooks
 
 ---
 
