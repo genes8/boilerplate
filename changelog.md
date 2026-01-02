@@ -35,6 +35,37 @@ All notable changes to this project will be documented in this file.
 ### Task Status
 - [x] Task 0.1 - Repository & Project Structure Setup (COMPLETED)
 - [x] Task 0.2 - Backend Project Initialization (COMPLETED)
+- [x] Task 0.3 - Frontend Project Initialization (COMPLETED)
+
+---
+
+## [1.5.0] - 2026-01-02
+
+### Added - Phase 0.3: Frontend Project Initialization
+
+- **TanStack Start Setup** - Kompletna frontend aplikacija:
+  - Inicijaliziran TanStack Start projekat sa React 19
+  - Postavljen pnpm za package management
+  - Kreirana kompletna `frontend/src/` struktura (routes/, components/ui/, lib/, hooks/, stores/)
+- **Core Dependencies** - Frontend stack:
+  - @tanstack/react-router (SSR routing)
+  - @tanstack/react-query (data fetching)
+  - tailwindcss v4 (styling)
+  - typescript (type safety)
+  - zod (validation)
+- **Styling Setup** - Modern UI framework:
+  - Tailwind CSS v4 sa custom configuration
+  - shadcn/ui komponente (Button, Card, Input, Label)
+  - CSS variables za theming (light/dark mode support)
+  - Custom color palette sa shadcn/ui design system
+- **Layout & Navigation** - Enterprise UI:
+  - Ažuriran `__root.tsx` sa enterprise branding
+  - Sticky header sa navigation (Home, Dashboard)
+  - Responsive design sa shadcn/ui styling
+  - TanStack Devtools integration za development
+
+### Task Status
+- [x] Task 0.3 - Frontend Project Initialization (COMPLETED)
 
 ---
 

@@ -81,9 +81,9 @@ Svaki task je označen sa:
 **Dependencies:** 0.1  
 **Assignee:** _____________
 
-- [ ] Inicijalizirati TanStack Start projekat
-- [ ] Postaviti pnpm za package management
-- [ ] Kreirati `frontend/src/` strukturu:
+- [x] Inicijalizirati TanStack Start projekat
+- [x] Postaviti pnpm za package management
+- [x] Kreirati `frontend/src/` strukturu:
   ```
   frontend/
   ├── src/
@@ -99,15 +99,15 @@ Svaki task je označen sa:
   ├── vite.config.ts
   └── tailwind.config.js
   ```
-- [ ] Instalirati core dependencies:
+- [x] Instalirati core dependencies:
   - @tanstack/react-router
   - @tanstack/react-query
   - tailwindcss
   - typescript
   - zod
-- [ ] Postaviti Tailwind CSS
-- [ ] Instalirati i konfigurisati shadcn/ui
-- [ ] Kreirati bazni layout (`__root.tsx`)
+- [x] Postaviti Tailwind CSS
+- [x] Instalirati i konfigurisati shadcn/ui
+- [x] Kreirati bazni layout (`__root.tsx`)
 
 #### 0.4 [PAR] Docker Development Environment
 **Estimated:** 2h  
