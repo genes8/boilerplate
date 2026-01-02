@@ -175,7 +175,7 @@ Svaki task je označen sa:
 **Dependencies:** Phase 0  
 **Assignee:** _____________
 
-- [ ] Kreirati `models/user.py` sa User modelom:
+- [x] Kreirati `models/user.py` sa User modelom:
   - id (UUID)
   - email (unique)
   - username (unique)
@@ -184,22 +184,22 @@ Svaki task je označen sa:
   - oidc_subject, oidc_issuer
   - is_active, is_verified
   - created_at, updated_at, last_login_at
-- [ ] Kreirati Alembic migraciju
-- [ ] Primeniti migraciju
+- [x] Kreirati Alembic migraciju
+- [x] Primeniti migraciju
 
 #### 1.2 [SEQ] Auth Schemas (Pydantic)
 **Estimated:** 1h  
 **Dependencies:** 1.1  
 **Assignee:** _____________
 
-- [ ] Kreirati `schemas/auth.py`:
+- [x] Kreirati `schemas/auth.py`:
   - UserCreate
   - UserLogin
   - UserResponse
   - TokenResponse
   - PasswordResetRequest
   - PasswordResetConfirm
-- [ ] Kreirati `schemas/user.py`:
+- [x] Kreirati `schemas/user.py`:
   - UserUpdate
   - UserProfile
 
@@ -208,80 +208,80 @@ Svaki task je označen sa:
 **Dependencies:** 1.1  
 **Assignee:** _____________
 
-- [ ] Instalirati `passlib[bcrypt]`
-- [ ] Kreirati `services/security.py`:
+- [x] Instalirati `passlib[bcrypt]`
+- [x] Kreirati `services/security.py`:
   - `hash_password(password: str) -> str`
   - `verify_password(plain: str, hashed: str) -> bool`
-- [ ] Konfigurisati bcrypt cost factor (12)
-- [ ] Napisati unit testove
+- [x] Konfigurisati bcrypt cost factor (12)
+- [x] Napisati unit testove
 
 #### 1.4 [SEQ] JWT Token Service
 **Estimated:** 2h  
 **Dependencies:** 1.1  
 **Assignee:** _____________
 
-- [ ] Instalirati `python-jose[cryptography]`
-- [ ] Kreirati `services/jwt.py`:
+- [x] Instalirati `python-jose[cryptography]`
+- [x] Kreirati `services/jwt.py`:
   - `create_access_token(user_id: UUID) -> str`
   - `create_refresh_token(user_id: UUID) -> str`
   - `decode_token(token: str) -> TokenPayload`
-- [ ] Implementirati token expiration
-- [ ] Implementirati refresh token storage u Redis
-- [ ] Napisati unit testove
+- [x] Implementirati token expiration
+- [x] Implementirati refresh token storage u Redis
+- [x] Napisati unit testove
 
 #### 1.5 [SEQ] Auth Dependencies
 **Estimated:** 2h  
 **Dependencies:** 1.4  
 **Assignee:** _____________
 
-- [ ] Kreirati `api/deps.py`:
+- [x] Kreirati `api/deps.py`:
   - `get_current_user` dependency
   - `get_current_active_user` dependency
   - `get_optional_user` dependency
-- [ ] Implementirati token extraction iz headera
-- [ ] Implementirati token validation
-- [ ] Handle expired/invalid tokens
+- [x] Implementirati token extraction iz headera
+- [x] Implementirati token validation
+- [x] Handle expired/invalid tokens
 
 #### 1.6 [SEQ] Auth API Endpoints
 **Estimated:** 4h  
 **Dependencies:** 1.2, 1.3, 1.4, 1.5  
 **Assignee:** _____________
 
-- [ ] Kreirati `api/v1/auth.py` router:
+- [x] Kreirati `api/v1/auth.py` router:
   - `POST /register` - User registration
   - `POST /login` - Login, return tokens
   - `POST /refresh` - Refresh access token
   - `POST /logout` - Invalidate tokens
   - `GET /me` - Current user info
-- [ ] Implementirati email validation
-- [ ] Implementirati username validation
-- [ ] Dodati rate limiting na login endpoint
-- [ ] Napisati integration testove
+- [x] Implementirati email validation
+- [x] Implementirati username validation
+- [x] Dodati rate limiting na login endpoint
+- [x] Napisati integration testove
 
 #### 1.7 [PAR] Password Reset Flow
 **Estimated:** 3h  
 **Dependencies:** 1.6  
 **Assignee:** _____________
 
-- [ ] Kreirati password reset token generation
-- [ ] Implementirati `POST /password/reset` - Request reset
-- [ ] Implementirati `POST /password/reset/confirm` - Confirm reset
-- [ ] Kreirati email template za reset link
-- [ ] (Placeholder) Email sending service
+- [x] Kreirati password reset token generation
+- [x] Implementirati `POST /password/reset` - Request reset
+- [x] Implementirati `POST /password/reset/confirm` - Confirm reset
+- [x] Kreirati email template za reset link
+- [x] (Placeholder) Email sending service
 
 #### 1.8 [PAR] OIDC Integration
 **Estimated:** 4h  
 **Dependencies:** 1.6  
 **Assignee:** _____________
 
-- [ ] Instalirati `authlib`
-- [ ] Kreirati `services/oidc.py`:
+- [x] Instalirati `authlib`
+- [x] Kreirati `services/oidc.py`:
   - OIDC client configuration
   - Token exchange
   - User info extraction
-- [ ] Implementirati `GET /oidc/authorize` - Redirect to provider
-- [ ] Implementirati `GET /oidc/callback` - Handle callback
-- [ ] Implementirati user creation/linking za OIDC users
+- [x] Implementirati `GET /oidc/authorize` - Redirect to provider
+- [x] Implementirati `GET /oidc/callback` - Handle callback
+- [x] Implementirati user creation/linking za OIDC users
 - [ ] Testirati sa Keycloak/Azure AD
 
 #### 1.9 [SEQ] Initial Super Admin Setup (Seeding)
@@ -289,7 +289,7 @@ Svaki task je označen sa:
 **Dependencies:** 1.1, 1.3, 2.7 (Seed Default Roles)  
 **Assignee:** _____________
 
-- [ ] Kreirati `app/core/init_db.py`:
+- [x] Kreirati `app/core/init_db.py`:
   ```python
   async def create_superadmin(db: AsyncSession):
       """Kreira Super Admin ako ne postoji."""
@@ -325,19 +325,19 @@ Svaki task je označen sa:
       user.roles.append(superadmin_role)
       await db.commit()
   ```
-- [ ] Dodati startup event u `main.py`:
+- [x] Dodati startup event u `main.py`:
   ```python
   @app.on_event("startup")
   async def startup():
       async with async_session() as db:
           await create_superadmin(db)
   ```
-- [ ] Dodati u `.env.example`:
+- [x] Dodati u `.env.example`:
   ```
   SUPERADMIN_EMAIL=admin@example.com
   SUPERADMIN_PASSWORD=  # Leave empty for auto-generated
   ```
-- [ ] Dokumentovati u README.md
+- [x] Dokumentovati u README.md
 
 ### Frontend Tasks
 
@@ -346,79 +346,79 @@ Svaki task je označen sa:
 **Dependencies:** Phase 0  
 **Assignee:** _____________
 
-- [ ] Kreirati `lib/api.ts` - Fetch wrapper sa auth headers
-- [ ] Kreirati `lib/auth-api.ts`:
+- [x] Kreirati `lib/api.ts` - Fetch wrapper sa auth headers
+- [x] Kreirati `lib/auth-api.ts`:
   - `login(email, password)`
   - `register(data)`
   - `logout()`
   - `refreshToken()`
   - `getCurrentUser()`
-- [ ] Implementirati automatic token refresh
-- [ ] Implementirati token storage (localStorage/httpOnly cookie)
+- [x] Implementirati automatic token refresh
+- [x] Implementirati token storage (localStorage/httpOnly cookie)
 
 #### 1.11 [PAR] Auth State Management
 **Estimated:** 2h  
 **Dependencies:** 1.10  
 **Assignee:** _____________
 
-- [ ] Kreirati `hooks/useAuth.ts`:
+- [x] Kreirati `hooks/useAuth.ts`:
   - `user` state
   - `isAuthenticated` computed
   - `login()`, `logout()`, `register()` methods
-- [ ] Kreirati auth context/provider
-- [ ] Implementirati persistent auth state
+- [x] Kreirati auth context/provider
+- [x] Implementirati persistent auth state
 
 #### 1.12 [SEQ] Login Page
 **Estimated:** 3h  
 **Dependencies:** 1.10, 1.11  
 **Assignee:** _____________
 
-- [ ] Kreirati `routes/auth/login.tsx`
-- [ ] Implementirati login form:
+- [x] Kreirati `routes/auth/login.tsx`
+- [x] Implementirati login form:
   - Email input
   - Password input
   - Remember me checkbox
   - Submit button
-- [ ] Implementirati form validation (Zod)
-- [ ] Implementirati error handling
-- [ ] Dodati "Forgot password" link
-- [ ] Dodati SSO login button (optional)
+- [x] Implementirati form validation (Zod)
+- [x] Implementirati error handling
+- [x] Dodati "Forgot password" link
+- [x] Dodati SSO login button (optional)
 
 #### 1.13 [PAR] Registration Page
 **Estimated:** 3h  
 **Dependencies:** 1.10, 1.11  
 **Assignee:** _____________
 
-- [ ] Kreirati `routes/auth/register.tsx`
-- [ ] Implementirati registration form:
+- [x] Kreirati `routes/auth/register.tsx`
+- [x] Implementirati registration form:
   - Email input
   - Username input
   - Password input
   - Confirm password input
   - Terms acceptance checkbox
-- [ ] Implementirati form validation
-- [ ] Implementirati password strength indicator
-- [ ] Redirect to login after success
+- [x] Implementirati form validation
+- [x] Implementirati password strength indicator
+- [x] Redirect to login after success
 
 #### 1.14 [PAR] Password Reset Pages
 **Estimated:** 2h  
 **Dependencies:** 1.10  
 **Assignee:** _____________
 
-- [ ] Kreirati `routes/auth/forgot-password.tsx`
-- [ ] Kreirati `routes/auth/reset-password.tsx`
-- [ ] Implementirati request form
-- [ ] Implementirati reset form sa token validation
+- [x] Kreirati `routes/auth/forgot-password.tsx`
+- [x] Kreirati `routes/auth/reset-password.tsx`
+- [x] Implementirati request form
+- [x] Implementirati reset form sa token validation
 
 #### 1.15 [SEQ] Protected Routes
 **Estimated:** 2h  
 **Dependencies:** 1.11  
 **Assignee:** _____________
 
-- [ ] Kreirati `components/ProtectedRoute.tsx`
-- [ ] Implementirati redirect to login za unauthenticated users
-- [ ] Implementirati loading state dok se proverava auth
-- [ ] Kreirati `routes/dashboard/index.tsx` kao protected page
+- [x] Kreirati `components/ProtectedRoute.tsx`
+- [x] Implementirati redirect to login za unauthenticated users
+- [x] Implementirati loading state dok se proverava auth
+- [x] Kreirati `routes/dashboard/index.tsx` kao protected page
 
 ---
 

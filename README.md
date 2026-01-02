@@ -154,6 +154,100 @@ Key variables:
 - `SUPERADMIN_EMAIL` - Initial super admin email
 - `SUPERADMIN_PASSWORD` - Initial super admin password (auto-generated if empty)
 
+## Super Admin Setup
+
+The application automatically creates a super admin user on first startup:
+
+### Configuration
+
+Set these variables in `.env`:
+
+```bash
+# Email for the initial super admin (required)
+SUPERADMIN_EMAIL=admin@example.com
+
+# Password (optional - auto-generated if empty)
+SUPERADMIN_PASSWORD=your_secure_password
+```
+
+### Auto-Generation
+
+If `SUPERADMIN_PASSWORD` is not set, a random password will be generated and displayed in the console:
+
+```
+============================================================
+  🔐 SUPER ADMIN CREATED
+============================================================
+  Email: admin@example.com
+  Password: abc123def456ghi789
+  ⚠️  SAVE THIS PASSWORD - IT WON'T BE SHOWN AGAIN!
+============================================================
+```
+
+### Notes
+
+- The super admin is created only if the email doesn't already exist
+- The account is marked as verified and active
+- Role assignment will be added when RBAC module is implemented (Phase 2)
+- For security, save the auto-generated password immediately
+
+### OIDC/SSO Configuration
+
+For single sign-on integration, configure these variables:
+
+```bash
+# Enable OIDC authentication
+OIDC_ENABLED=true
+OIDC_ISSUER_URL=https://your-oidc-provider.com
+OIDC_CLIENT_ID=your_client_id
+OIDC_CLIENT_SECRET=your_client_secret
+OIDC_REDIRECT_URI=http://localhost:8000/api/v1/oidc/callback
+```
+
+Supported providers:
+- **Keycloak** - Self-hosted or managed
+- **Azure AD** - Microsoft Entra ID
+- **Google Workspace** - Google Workspace accounts
+- **Okta** - Enterprise SSO
+- **Auth0** - Authentication platform
+
+### Testing OIDC Integration
+
+To test OIDC without a full provider setup:
+
+1. **Keycloak (Recommended for testing)**
+   ```bash
+   docker run -p 8080:8080 \
+     -e KEYCLOAK_ADMIN=admin \
+     -e KEYCLOAK_ADMIN_PASSWORD=admin \
+     quay.io/keycloak/keycloak:latest \
+     start-dev
+   ```
+   - Access: http://localhost:8080
+   - Create realm, client, and test user
+   - Configure OIDC variables with Keycloak URLs
+
+2. **Google Workspace**
+   - Create OAuth 2.0 client in Google Console
+   - Add redirect URI: `http://localhost:8000/api/v1/oidc/callback`
+   - Enable Google+ API
+   - Use client credentials in environment variables
+
+3. **Azure AD**
+   - Register app in Azure Portal
+   - Add redirect URI
+   - Grant API permissions
+   - Use tenant-specific issuer URL
+
+### Testing Steps
+
+1. Configure OIDC variables in `.env`
+2. Start the application
+3. Navigate to: `http://localhost:8000/api/v1/oidc/authorize`
+4. Complete authentication with provider
+5. User will be created/linked automatically
+6. JWT tokens returned for API access
+
 ## Documentation
 
 - [Technical Specification](./Enterprise_Boilerplate_Specifikacija.md)

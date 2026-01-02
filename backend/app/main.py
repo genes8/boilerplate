@@ -8,8 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.api.test_redis import router as test_redis_router
+from app.api.v1 import api_v1_router
 from app.config import settings
-from app.core.database import close_db, engine
+from app.core.database import async_session_maker, close_db, engine
+from app.core.init_db import init_database
 from app.core.redis import close_redis, init_redis
 
 
@@ -35,7 +37,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception as e:
         print(f"❌ Redis initialization failed: {e}")
 
-    # TODO: Create super admin if needed
+    # Initialize database (create super admin, etc.)
+    try:
+        async with async_session_maker() as db:
+            await init_database(db)
+    except Exception as e:
+        print(f"⚠️ Database initialization warning: {e}")
 
     yield
 
@@ -69,8 +76,8 @@ def create_application() -> FastAPI:
     # Add test routers
     app.include_router(test_redis_router)
 
-    # TODO: Add production routers
-    # app.include_router(api_v1_router, prefix="/api/v1")
+    # Add API v1 router
+    app.include_router(api_v1_router)
 
     # Health check endpoint
     @app.get("/health")

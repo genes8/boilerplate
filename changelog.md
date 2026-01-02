@@ -4,6 +4,172 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.1.0] - 2026-01-02
+
+### Added - Phase 1: Authentication Module (Frontend Tasks 1.10-1.15)
+
+- **Auth API Client** (Task 1.10):
+  - `lib/api.ts` - Fetch wrapper sa automatic auth headers
+  - Token storage (localStorage) sa `tokenStorage` utility
+  - Automatic token refresh na 401 response
+  - `lib/auth-api.ts` - Auth API funkcije (login, register, logout, refresh, etc.)
+
+- **Auth State Management** (Task 1.11):
+  - `lib/auth-context.tsx` - React Context za auth state
+  - `hooks/useAuth.ts` - Custom hook za auth operacije
+  - Persistent auth state sa automatic user fetch
+
+- **Login Page** (Task 1.12):
+  - `routes/auth/login.tsx` - Modern login stranica
+  - Email/password form sa Zod validacijom
+  - Remember me checkbox, forgot password link
+  - SSO buttons (Google, GitHub) - placeholder
+  - Gradient split-screen dizajn
+
+- **Registration Page** (Task 1.13):
+  - `routes/auth/register.tsx` - Registration stranica
+  - Password strength indicator
+  - Password requirements checklist
+  - Terms acceptance checkbox
+
+- **Password Reset Pages** (Task 1.14):
+  - `routes/auth/forgot-password.tsx` - Request reset
+  - `routes/auth/reset-password.tsx` - Confirm reset
+  - Success/error state handling
+
+- **Protected Routes** (Task 1.15):
+  - `components/ProtectedRoute.tsx` - Auth guard komponenta
+  - `routes/dashboard/index.tsx` - Protected dashboard
+  - Redirect to login za unauthenticated users
+  - Loading state dok se proverava auth
+
+- **UI Components**:
+  - `components/ui/checkbox.tsx` - Checkbox komponenta
+  - `components/ui/separator.tsx` - Separator komponenta
+
+- **Root Layout Update**:
+  - AuthProvider integrisan u `__root.tsx`
+
+### Task Status
+- [x] Task 1.10 - Auth API Client (COMPLETED)
+- [x] Task 1.11 - Auth State Management (COMPLETED)
+- [x] Task 1.12 - Login Page (COMPLETED)
+- [x] Task 1.13 - Registration Page (COMPLETED)
+- [x] Task 1.14 - Password Reset Pages (COMPLETED)
+- [x] Task 1.15 - Protected Routes (COMPLETED)
+
+---
+
+## [2.0.0] - 2026-01-02
+
+### Added - Phase 1: Authentication Module (Backend Tasks 1.1-1.7)
+
+- **User Model & Migration** (Task 1.1):
+  - `app/models/user.py` sa kompletnim User modelom
+  - UUID primary key, email/username (unique), password_hash
+  - auth_provider, oidc_subject, oidc_issuer za SSO support
+  - is_active, is_verified, last_login_at tracking
+  - Alembic migracija `4c476b041802_create_users_table.py`
+  - Indexi za email, username, auth_provider, OIDC fields
+
+- **Auth Schemas** (Task 1.2):
+  - `app/schemas/auth.py`:
+    - UserCreate, UserLogin, UserResponse
+    - TokenResponse, TokenPayload, RefreshTokenRequest
+    - PasswordResetRequest, PasswordResetConfirm, PasswordChange
+    - MessageResponse
+  - `app/schemas/user.py`:
+    - UserUpdate, UserProfile, UserInDB
+
+- **Password Hashing Service** (Task 1.3):
+  - `app/services/security.py` sa bcrypt hashing
+  - `hash_password()`, `verify_password()`, `needs_rehash()`
+  - Bcrypt cost factor 12 (production-ready)
+
+- **JWT Token Service** (Task 1.4):
+  - `app/services/jwt.py` sa kompletnim JWT management
+  - `create_access_token()`, `create_refresh_token()`, `create_tokens()`
+  - `decode_token()`, `is_token_expired()`
+  - Refresh token storage u Redis
+  - `store_refresh_token()`, `validate_refresh_token()`, `invalidate_refresh_token()`
+
+- **Auth Dependencies** (Task 1.5):
+  - `app/api/deps.py` sa FastAPI dependencies
+  - `get_current_user` - extracts user from JWT
+  - `get_current_active_user` - validates user is active
+  - `get_optional_user` - returns None if not authenticated
+  - Type aliases: CurrentUser, CurrentActiveUser, OptionalUser
+
+- **Auth API Endpoints** (Task 1.6):
+  - `app/api/v1/auth.py` router sa endpoints:
+    - `POST /api/v1/auth/register` - User registration
+    - `POST /api/v1/auth/login` - Login, return tokens
+    - `POST /api/v1/auth/refresh` - Refresh access token
+    - `POST /api/v1/auth/logout` - Invalidate tokens
+    - `GET /api/v1/auth/me` - Current user info
+    - `POST /api/v1/auth/change-password` - Change password
+  - Email i username validation
+  - Proper error handling
+
+- **Password Reset Flow** (Task 1.7):
+  - `app/services/password_reset.py`:
+    - `create_password_reset_token()` - generates secure token
+    - `verify_password_reset_token()` - validates token
+    - `invalidate_password_reset_token()` - cleanup after use
+  - Endpoints:
+    - `POST /api/v1/auth/password/reset` - Request reset
+    - `POST /api/v1/auth/password/reset/confirm` - Confirm reset
+  - Token storage u Redis sa 30min expiration
+  - Security: always returns success (no email enumeration)
+
+- **API Router Setup**:
+  - `app/api/v1/__init__.py` sa api_v1_router
+  - Integrated u `main.py`
+
+- **Unit Tests** (Task 1.3, 1.4):
+  - `tests/test_security.py` - Password hashing tests
+  - `tests/test_jwt.py` - JWT token tests
+  - `tests/conftest.py` - Pytest fixtures
+  - `tests/test_auth_api.py` - Integration tests za auth endpoints
+
+- **Rate Limiting** (Task 1.6):
+  - `app/core/rate_limit.py` - Redis-based rate limiting
+  - Login: 5 requests/minute, 5min block
+  - Register: 3 requests/minute, 10min block
+  - Password reset: 3 requests/minute, 10min block
+
+- **Email Service** (Task 1.7):
+  - `app/services/email.py` - Placeholder email service
+  - HTML templates za password reset, welcome, email verification
+  - Development mode: logs emails to console
+
+- **OIDC Integration** (Task 1.8):
+  - `app/services/oidc.py` - OIDC service sa authlib
+  - `app/api/v1/oidc.py` - OIDC endpoints:
+    - `GET /api/v1/oidc/authorize` - Initiate OIDC login
+    - `GET /api/v1/oidc/callback` - Handle callback
+  - User creation/linking za OIDC users
+  - State/nonce storage u Redis
+
+- **Super Admin Setup** (Task 1.9):
+  - `app/core/init_db.py` - Database initialization
+  - Auto-create super admin on startup
+  - Auto-generate password if not provided
+  - Integrated u application lifespan
+
+### Task Status
+- [x] Task 1.1 - User Model & Migration (COMPLETED)
+- [x] Task 1.2 - Auth Schemas (COMPLETED)
+- [x] Task 1.3 - Password Hashing Service (COMPLETED)
+- [x] Task 1.4 - JWT Token Service (COMPLETED)
+- [x] Task 1.5 - Auth Dependencies (COMPLETED)
+- [x] Task 1.6 - Auth API Endpoints (COMPLETED)
+- [x] Task 1.7 - Password Reset Flow (COMPLETED)
+- [x] Task 1.8 - OIDC Integration (COMPLETED)
+- [x] Task 1.9 - Initial Super Admin Setup (COMPLETED)
+
+---
+
 ## [1.9.0] - 2026-01-02
 
 ### Added - Phase 0.7: CI/CD Pipeline - Basic
