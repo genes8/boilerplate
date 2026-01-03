@@ -72,6 +72,31 @@ Kompletna frontend implementacija za Document Management i Full-Text Search sa M
 - [x] Task 3.9 - Document Detail/Edit Page (COMPLETED)
 - [x] Task 3.10 - Search UI (COMPLETED)
 
+### Fixed - QueryClientProvider and Protected Routes
+
+- **QueryClientProvider** (`routes/__root.tsx`):
+  - Dodat QueryClient sa default options (staleTime: 5min, retry: 1)
+  - Wrappovan AuthProvider sa QueryClientProvider
+  - Rešuje "No QueryClient set" grešku
+
+- **Protected Routes**:
+  - Dodat ProtectedRoute wrapper na Documents List page
+  - Dodat ProtectedRoute wrapper na Document Detail page
+  - Dodat ProtectedRoute wrapper na Search page
+  - Rešava 401 Unauthorized greške za neautentifikovane korisnike
+
+---
+
+## [2.7.1] - 2026-01-03
+
+### Fixed - Motion Animation Color Error
+
+- **CSS Variables** (`styles.css`):
+  - Uklonjen duplikat oklch() color variables
+  - Zadržane samo HSL color variables
+  - Rešava "oklch(0.269 0 0) is not an animatable color" warning
+  - Motion sada može da animira boje bez grešaka
+
 ---
 
 ## [2.6.0] - 2026-01-03
