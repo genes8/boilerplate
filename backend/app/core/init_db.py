@@ -9,6 +9,7 @@ from sqlalchemy.orm import selectinload
 from app.config import settings
 from app.core.seed_rbac import get_role_by_name, seed_rbac
 from app.models.user import AuthProvider, User
+from app.models.user_role import UserRole
 from app.services.security import hash_password
 
 
@@ -40,7 +41,12 @@ async def create_superadmin(db: AsyncSession) -> None:
         # Check if user has Super Admin role
         superadmin_role = await get_role_by_name(db, "Super Admin")
         if superadmin_role and superadmin_role not in existing_user.roles:
-            existing_user.roles.append(superadmin_role)
+            # Create UserRole entry directly (relationship append doesn't work)
+            user_role = UserRole(
+                user_id=existing_user.id,
+                role_id=superadmin_role.id,
+            )
+            db.add(user_role)
             await db.commit()
             print(f"✅ Super Admin role assigned to: {email}")
         else:
@@ -71,7 +77,12 @@ async def create_superadmin(db: AsyncSession) -> None:
     # Assign Super Admin role
     superadmin_role = await get_role_by_name(db, "Super Admin")
     if superadmin_role:
-        user.roles.append(superadmin_role)
+        # Create UserRole entry directly (relationship append doesn't work)
+        user_role = UserRole(
+            user_id=user.id,
+            role_id=superadmin_role.id,
+        )
+        db.add(user_role)
 
     await db.commit()
     await db.refresh(user)

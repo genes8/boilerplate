@@ -617,90 +617,91 @@ Svaki task je označen sa:
 #### 3.1 [SEQ] Document Model & Migration
 **Estimated:** 2h  
 **Dependencies:** Phase 0  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `models/document.py`:
+- [x] Kreirati `models/document.py`:
   - id (UUID)
   - title
   - content
-  - metadata (JSONB)
+  - meta (JSONB)
   - owner_id (FK to users)
   - search_vector (tsvector, generated)
   - created_at, updated_at
-- [ ] Kreirati Alembic migraciju sa:
+- [x] Kreirati Alembic migraciju sa:
   - GIN index za search_vector
   - Trigram indexes za fuzzy search
-- [ ] Primeniti migraciju
+- [x] Primeniti migraciju
+- [x] Popraviti RBAC Super Admin wildcard i UserRole assignment bug
 
 #### 3.2 [SEQ] Document Schemas
 **Estimated:** 1h  
 **Dependencies:** 3.1  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `schemas/document.py`:
+- [x] Kreirati `schemas/document.py`:
   - DocumentCreate
   - DocumentUpdate
   - DocumentResponse
-  - DocumentList (sa pagination)
-- [ ] Kreirati `schemas/search.py`:
+  - DocumentListResponse (sa pagination)
+- [x] Kreirati `schemas/search.py`:
   - SearchRequest (query, mode, filters)
   - SearchResponse (results, total, highlights)
 
 #### 3.3 [SEQ] Document CRUD Service
 **Estimated:** 2h  
 **Dependencies:** 3.1, 3.2  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `services/document.py`:
+- [x] Kreirati `services/document.py`:
   - `create_document()`
   - `get_document()`
   - `update_document()`
   - `delete_document()`
   - `list_documents()` sa pagination
-- [ ] Implementirati ownership checking
-- [ ] Napisati unit testove
+- [x] Implementirati ownership checking
+- [x] Napisati unit testove
 
 #### 3.4 [SEQ] Search Service
 **Estimated:** 4h  
 **Dependencies:** 3.1  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `services/search.py`:
+- [x] Kreirati `services/search.py`:
   - `search_simple(query)` - plainto_tsquery
   - `search_phrase(query)` - phraseto_tsquery
   - `search_fuzzy(query)` - pg_trgm similarity
   - `search_boolean(query)` - to_tsquery
-- [ ] Implementirati ranking sa ts_rank
-- [ ] Implementirati highlighting sa ts_headline
-- [ ] Implementirati filtering (owner, date range, metadata)
-- [ ] Implementirati pagination
-- [ ] Napisati unit testove
+- [x] Implementirati ranking sa ts_rank
+- [x] Implementirati highlighting sa ts_headline
+- [x] Implementirati filtering (owner, date range, metadata)
+- [x] Implementirati pagination
+- [x] Napisati unit testove
 
 #### 3.5 [SEQ] Document API Endpoints
 **Estimated:** 3h  
 **Dependencies:** 3.3, 3.4  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `api/v1/documents.py`:
+- [x] Kreirati `api/v1/documents.py`:
   - `GET /documents` - List documents
   - `POST /documents` - Create document
   - `GET /documents/{id}` - Get document
   - `PUT /documents/{id}` - Update document
   - `DELETE /documents/{id}` - Delete document
-- [ ] Primeniti RBAC permissions
-- [ ] Napisati integration testove
+- [x] Primeniti RBAC permissions
+- [x] Napisati integration testove
 
 #### 3.6 [SEQ] Search API Endpoint
 **Estimated:** 2h  
 **Dependencies:** 3.4, 3.5  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `api/v1/search.py`:
+- [x] Kreirati `api/v1/search.py`:
   - `POST /search` - Search documents
-  - `GET /search/suggestions` - Autocomplete (optional)
-- [ ] Implementirati search mode selection
-- [ ] Implementirati filter parameters
-- [ ] Napisati integration testove
+  - `GET /search/suggestions` - Autocomplete
+- [x] Implementirati search mode selection
+- [x] Implementirati filter parameters
+- [x] Napisati integration testove
 
 ### Frontend Tasks
 

@@ -2,6 +2,7 @@
 
 from app.models.audit_log import AuditAction, AuditLog
 from app.models.base import BaseModel, TimestampMixin, UUIDMixin
+from app.models.document import Document
 from app.models.permission import Permission, PermissionScope
 from app.models.role import Role
 from app.models.role_permission import RolePermission
@@ -21,4 +22,5 @@ __all__ = [
     "UserRole",
     "AuditLog",
     "AuditAction",
+    "Document",
 ]

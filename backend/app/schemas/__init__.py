@@ -12,6 +12,12 @@ from app.schemas.auth import (
     UserLogin,
     UserResponse,
 )
+from app.schemas.document import (
+    DocumentCreate,
+    DocumentListResponse,
+    DocumentResponse,
+    DocumentUpdate,
+)
 from app.schemas.permission import (
     PermissionAssign,
     PermissionCreate,
@@ -23,6 +29,15 @@ from app.schemas.role import (
     RoleListResponse,
     RoleResponse,
     RoleUpdate,
+)
+from app.schemas.search import (
+    SearchFilters,
+    SearchMode,
+    SearchRequest,
+    SearchResponse,
+    SearchResultItem,
+    SearchSuggestion,
+    SearchSuggestionsResponse,
 )
 from app.schemas.user import UserInDB, UserProfile, UserUpdate
 from app.schemas.user_role import (
@@ -65,4 +80,17 @@ __all__ = [
     "UserRoleResponse",
     "UserRolesResponse",
     "RoleBrief",
+    # Document
+    "DocumentCreate",
+    "DocumentUpdate",
+    "DocumentResponse",
+    "DocumentListResponse",
+    # Search
+    "SearchMode",
+    "SearchFilters",
+    "SearchRequest",
+    "SearchResponse",
+    "SearchResultItem",
+    "SearchSuggestion",
+    "SearchSuggestionsResponse",
 ]

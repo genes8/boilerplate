@@ -70,7 +70,7 @@ DEFAULT_ROLES = [
         "Super Admin",
         "Full system access with all permissions",
         True,
-        [("system", "*", PermissionScope.ALL.value)],  # Wildcard - all permissions
+        [("*", "*", PermissionScope.ALL.value)],  # Wildcard - all permissions
     ),
     (
         "Admin",
@@ -213,10 +213,21 @@ async def seed_roles(
         
         # Assign permissions to role using association table directly
         for resource, action, scope in permission_patterns:
-            if action == "*":
+            # Handle wildcard permissions
+            if resource == "*" and action == "*":
+                # Full wildcard - assign ALL permissions
+                for perm in permissions_map.values():
+                    if perm.id not in existing_perm_ids:
+                        role_perm = RolePermission(
+                            role_id=role.id,
+                            permission_id=perm.id,
+                        )
+                        db.add(role_perm)
+                        existing_perm_ids.add(perm.id)
+            elif action == "*":
                 # Wildcard action - assign all permissions for this resource
                 for perm_key, perm in permissions_map.items():
-                    if perm_key[0] == resource or resource == "system":
+                    if perm_key[0] == resource:
                         if perm.id not in existing_perm_ids:
                             role_perm = RolePermission(
                                 role_id=role.id,
@@ -225,6 +236,7 @@ async def seed_roles(
                             db.add(role_perm)
                             existing_perm_ids.add(perm.id)
             else:
+                # Specific permission
                 perm_key = (resource, action, scope)
                 if perm_key in permissions_map:
                     perm = permissions_map[perm_key]

@@ -4,6 +4,92 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.6.0] - 2026-01-03
+
+### Added - Phase 3: Full-Text Search (Tasks 3.1-3.6)
+
+Kompletna backend implementacija za Document Management i Full-Text Search.
+
+- **Document Model** (`app/models/document.py`) - Task 3.1:
+  - `id` (UUID), `title`, `content`, `meta` (JSONB)
+  - `owner_id` (FK), `search_vector` (TSVECTOR)
+  - Trigger za automatsko ažuriranje search_vector
+
+- **Alembic Migracija** (`003_create_documents_table.py`):
+  - GIN index za `search_vector` (full-text search)
+  - Trigram indexes za fuzzy search
+  - Weighted search: title (A), content (B)
+
+- **Document Schemas** (`app/schemas/document.py`) - Task 3.2:
+  - DocumentCreate, DocumentUpdate, DocumentResponse
+  - DocumentListResponse sa pagination
+
+- **Search Schemas** (`app/schemas/search.py`) - Task 3.2:
+  - SearchMode enum (simple, phrase, fuzzy, boolean)
+  - SearchRequest, SearchFilters
+  - SearchResponse, SearchResultItem, SearchHighlight
+  - SearchSuggestionsResponse
+
+- **Document CRUD Service** (`app/services/document.py`) - Task 3.3:
+  - `create_document()`, `get_document()`, `update_document()`, `delete_document()`
+  - `list_documents()` sa pagination
+  - `check_document_ownership()`, `get_document_with_owner_check()`
+
+- **Search Service** (`app/services/search.py`) - Task 3.4:
+  - `search_simple()` - plainto_tsquery
+  - `search_phrase()` - phraseto_tsquery (exact phrase)
+  - `search_fuzzy()` - pg_trgm similarity (typo tolerance)
+  - `search_boolean()` - to_tsquery (AND/OR/NOT)
+  - ts_rank ranking, ts_headline highlighting
+  - Filtering: owner, date range, metadata (JSONB)
+  - `get_suggestions()` - Autocomplete
+
+- **Document API** (`app/api/v1/documents.py`) - Task 3.5:
+  - `GET /documents` - List (RBAC: own vs all)
+  - `POST /documents` - Create
+  - `GET /documents/{id}` - Get details
+  - `PUT /documents/{id}` - Update
+  - `DELETE /documents/{id}` - Delete
+
+- **Search API** (`app/api/v1/search.py`) - Task 3.6:
+  - `POST /search` - Search documents (4 modes)
+  - `GET /search/suggestions` - Autocomplete
+
+### Fixed - RBAC Super Admin Wildcard & UserRole Assignment
+
+- Popravljeno Super Admin wildcard u `app/core/seed_rbac.py`:
+  - Pre: `("system", "*", PermissionScope.ALL.value)`
+  - Posle: `("*", "*", PermissionScope.ALL.value)` - pravi wildcard za sve permissions
+- Popravljena wildcard logika u `seed_roles()` za dodelu svih permissions Super Admin roli
+- Popravljeno `app/core/init_db.py` - UserRole assignment:
+  - Pre: `user.roles.append(role)` - ne kreira zapis u user_roles tabeli
+  - Posle: Direktan `UserRole(user_id, role_id)` insert - radi ispravno
+- admin@example.com sada ima Super Admin rolu sa punim pristupom
+
+### Removed - Frontend Demo Folder
+
+- Obrisan `frontend/src/routes/demo` folder (TanStack Start boilerplate demo fajlovi)
+
+### Added - Unit Tests
+
+- `tests/test_document_service.py` - 14 testova za Document service
+- `tests/test_search_service.py` - 14 testova za Search service
+
+### Added - Integration Tests
+
+- `tests/test_document_api.py` - 11 testova za Document API
+- `tests/test_search_api.py` - 12 testova za Search API
+
+### Task Status
+- [x] Task 3.1 - Document Model & Migration (COMPLETED)
+- [x] Task 3.2 - Document Schemas (COMPLETED)
+- [x] Task 3.3 - Document CRUD Service (COMPLETED)
+- [x] Task 3.4 - Search Service (COMPLETED)
+- [x] Task 3.5 - Document API Endpoints (COMPLETED)
+- [x] Task 3.6 - Search API Endpoint (COMPLETED)
+
+---
+
 ## [2.5.0] - 2026-01-03
 
 ### Changed - Landing Page Redesign
