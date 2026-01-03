@@ -106,7 +106,7 @@ Svaki task je označen sa:
   - typescript
   - zod
 - [x] Postaviti Tailwind CSS
-- [x] Instalirati i konfigurisati shadcn/ui
+- [x] Instalirati Motion.dev biblioteku za animacije
 - [x] Kreirati bazni layout (`__root.tsx`)
 - [x] Landing Page Redesign:
   - Editorial/Industrial estetika (crno-bela paleta)

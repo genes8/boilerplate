@@ -4,6 +4,90 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.9.0] - 2026-01-03
+
+### Changed - Admin Pages Redesign (Users & Roles)
+
+Kompletno redizajnirane Admin stranice sa Motion.dev estetikom, usklađene sa Dashboard dizajnom.
+
+- **Users Page** (`routes/admin/users/index.tsx`):
+  - Dark theme (neutral-950 background, neutral-50 text)
+  - Animated background grid (30s loop)
+  - Motion.dev animacije: staggered table rows, spring physics
+  - Header sa back button i gradient icon
+  - AnimatePresence za bulk action button i error messages
+  - Role badges sa gradient colors i hover effects
+  - User avatars sa gradient based on primary role
+  - Pagination sa motion hover effects
+  - Dialogs sa dark theme styling
+
+- **Roles Page** (`routes/admin/roles/index.tsx`):
+  - Dark theme konzistentan sa Users i Dashboard
+  - Animated grid background
+  - Role cards sa gradient top bar i hover effects
+  - Staggered card animations (containerVariants/itemVariants)
+  - Motion hover effects na ikonama i dugmadima
+  - System role badge sa Sparkles icon
+  - Create/Delete dialogs sa dark theme
+
+- **Edit Role Page** (`routes/admin/roles/$roleId.tsx`):
+  - Kompletno redizajnirana sa Motion.dev dark theme
+  - Animated background grid
+  - Header sa back button, gradient role icon, system badge
+  - AnimatePresence za Save Changes button (prikazuje se samo kad ima promena)
+  - Role Details card sa dark styled inputs
+  - Permissions card sa animated permission badges
+  - Grouped permissions po resource sa staggered animacije
+  - Remove permission button sa hover effects
+  - Manage Permissions dialog sa dark theme i motion labels
+
+- **Motion.dev Animacije**:
+  - `containerVariants` - staggered children (0.05-0.08s delay)
+  - `itemVariants` - spring physics (stiffness: 100, damping: 15)
+  - `headerVariants` - slide-in from top
+  - `whileHover`, `whileTap` gesturi na svim interaktivnim elementima
+  - `AnimatePresence` za mount/unmount animacije
+
+- **UI Konzistentnost**:
+  - Gradient boje po rolama: Super Admin (violet), Admin (blue-cyan), Manager (emerald), User (amber), Viewer (neutral)
+  - Border colors: neutral-800, hover: neutral-700
+  - Button styles: gradient za primary, transparent outline za secondary
+  - Input styles: bg-neutral-900/50, border-neutral-800
+
+### Changed - Documentation Updates
+
+- **Enterprise_Boilerplate_Specifikacija.md**:
+  - Zamenjen shadcn/ui sa Motion.dev u Recommended UI Libraries
+  - Ažuriran Useful Links sa Motion.dev dokumentacijom
+
+- **DEVELOPMENT_PHASES.md**:
+  - Zamenjen "Instalirati i konfigurisati shadcn/ui" sa "Instalirati Motion.dev biblioteku za animacije"
+
+---
+
+## [2.8.2] - 2026-01-03
+
+### Fixed - TanStack Router 404 Warning & Permissions API Type Mismatch
+
+Ispravljene greške u frontend-u.
+
+- **TanStack Router 404 Warning** (`frontend/src/routes/__root.tsx`):
+  - Dodat `notFoundComponent` property u `createRootRoute` konfiguraciju
+  - Kreiran `NotFoundPage` komponenta sa 404 porukom
+  - Rešava "notFoundError was encountered on the route with ID '__root__'" upozorenje
+
+- **Permissions API Type Mismatch** (`frontend/src/lib/rbac-api.ts`, `frontend/src/routes/admin/roles/$roleId.tsx`):
+  - Dodat `PermissionListResponse` interface sa `items` i `total` poljima
+  - Ažuriran `getPermissions()` da vraća `PermissionListResponse` umesto `Permission[]`
+  - Ažuriran `$roleId.tsx` da koristi `permissionsData.items` umesto `permissionsData`
+  - Rešava "allPermissions.filter is not a function" grešku u PermissionAssignDialog
+
+- **Dashboard Cleanup** (`frontend/src/routes/dashboard/index.tsx`):
+  - Uklonjen "Create Document" CTA sa sidebar-a
+  - Čistiji layout bez nepotrebnih elemenata
+
+---
+
 ## [2.8.1] - 2026-01-03
 
 ### Fixed - User Management API & Audit Log Issues

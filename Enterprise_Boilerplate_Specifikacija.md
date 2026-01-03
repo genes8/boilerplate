@@ -1266,7 +1266,7 @@ docker compose up -d --scale api=3
 
 ### 9.3 Recommended UI Libraries
 
-- **Shadcn/ui** - Accessible, customizable components (Radix-based)
+- **Motion.dev** - Production-ready animation library (https://motion.dev/docs/react)
 - **Tailwind CSS** - Utility-first styling
 - **Lucide Icons** - Consistent icon set
 - **Zod** - Schema validation (shared with backend Pydantic)
@@ -1288,7 +1288,7 @@ frontend/
 │   │       ├── index.tsx
 │   │       └── $id.tsx         # Dynamic route
 │   ├── components/             # Reusable components
-│   │   ├── ui/                 # Shadcn components
+│   │   ├── ui/                 # UI components
 │   │   └── features/           # Feature-specific
 │   ├── lib/
 │   │   ├── api.ts              # API client (fetch wrapper)
@@ -1443,7 +1443,7 @@ docker compose exec api pytest -v
 - **Hetzner Cloud:** https://console.hetzner.cloud
 - **PostgreSQL FTS:** https://www.postgresql.org/docs/current/textsearch.html
 - **pgvector:** https://github.com/pgvector/pgvector
-- **Shadcn/ui:** https://ui.shadcn.com
+- **Motion.dev:** https://motion.dev/docs/react
 - **Traefik:** https://doc.traefik.io/traefik/
 
 ### A.3 Security Checklist

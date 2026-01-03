@@ -3,10 +3,8 @@ import { useState, useEffect } from 'react'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { RequireRole } from '@/components/RequireRole'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -19,6 +17,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import { rbacApi, Role, Permission, RoleUpdate } from '@/lib/rbac-api'
+import { motion, AnimatePresence } from 'motion/react'
 import {
   Shield,
   ArrowLeft,
@@ -51,21 +50,34 @@ function RoleDetailsPage() {
 
 function AccessDenied() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      <Card className="w-full max-w-md border-0 shadow-2xl">
-        <CardContent className="pt-6 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-            <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
-          </div>
-          <h2 className="text-xl font-bold mb-2">Access Denied</h2>
-          <p className="text-muted-foreground mb-4">
-            You don't have permission to access this page.
-          </p>
-          <Link to="/dashboard">
-            <Button>Return to Dashboard</Button>
-          </Link>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+        className="w-full max-w-md border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm p-8 text-center"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
+          className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-red-500/10 flex items-center justify-center"
+        >
+          <AlertTriangle className="w-8 h-8 text-red-400" />
+        </motion.div>
+        <h2 className="text-xl font-bold mb-2">Access Denied</h2>
+        <p className="text-neutral-400 mb-6">
+          You don't have permission to access this page.
+        </p>
+        <Link to="/dashboard">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Return to Dashboard
+            </Button>
+          </motion.div>
+        </Link>
+      </motion.div>
     </div>
   )
 }
@@ -92,7 +104,7 @@ function RoleDetailsContent() {
         rbacApi.getPermissions(),
       ])
       setRole(roleData)
-      setAllPermissions(permissionsData)
+      setAllPermissions(permissionsData.items)
       setEditName(roleData.name)
       setEditDescription(roleData.description || '')
     } catch (err) {
@@ -162,13 +174,13 @@ function RoleDetailsContent() {
 
   const getRoleColor = (roleName: string) => {
     const colors: Record<string, string> = {
-      'Super Admin': 'from-violet-500 to-purple-600',
-      Admin: 'from-blue-500 to-indigo-600',
-      Manager: 'from-emerald-500 to-teal-600',
-      User: 'from-amber-500 to-orange-600',
-      Viewer: 'from-slate-400 to-slate-600',
+      'Super Admin': 'from-violet-500 to-purple-500',
+      Admin: 'from-blue-500 to-cyan-500',
+      Manager: 'from-emerald-500 to-teal-500',
+      User: 'from-amber-500 to-orange-500',
+      Viewer: 'from-neutral-400 to-neutral-500',
     }
-    return colors[roleName] || 'from-gray-500 to-gray-600'
+    return colors[roleName] || 'from-neutral-500 to-neutral-600'
   }
 
   const groupPermissionsByResource = (permissions: Permission[]) => {
@@ -182,31 +194,86 @@ function RoleDetailsContent() {
     return grouped
   }
 
+  const headerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring' as const,
+        stiffness: 100,
+        damping: 20,
+      },
+    },
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring' as const,
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+  }
+
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-        <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
+      <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        >
+          <Loader2 className="w-8 h-8 text-violet-500" />
+        </motion.div>
       </div>
     )
   }
 
   if (!role) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-        <Card className="w-full max-w-md border-0 shadow-2xl">
-          <CardContent className="pt-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-              <AlertTriangle className="w-8 h-8 text-amber-600 dark:text-amber-400" />
-            </div>
-            <h2 className="text-xl font-bold mb-2">Role Not Found</h2>
-            <p className="text-muted-foreground mb-4">
-              The role you're looking for doesn't exist.
-            </p>
-            <Link to="/admin/roles">
-              <Button>Back to Roles</Button>
-            </Link>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-neutral-950 text-neutral-50 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+          className="w-full max-w-md border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm p-8 text-center"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
+            className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-500/10 flex items-center justify-center"
+          >
+            <AlertTriangle className="w-8 h-8 text-amber-400" />
+          </motion.div>
+          <h2 className="text-xl font-bold mb-2">Role Not Found</h2>
+          <p className="text-neutral-400 mb-6">
+            The role you're looking for doesn't exist.
+          </p>
+          <Link to="/admin/roles">
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Roles
+              </Button>
+            </motion.div>
+          </Link>
+        </motion.div>
       </div>
     )
   }
@@ -214,170 +281,260 @@ function RoleDetailsContent() {
   const groupedPermissions = groupPermissionsByResource(role.permissions || [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      <div className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container mx-auto px-6 py-4">
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 overflow-hidden">
+      {/* Animated background grid */}
+      <div className="fixed inset-0 pointer-events-none">
+        <motion.div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+          animate={{
+            backgroundPosition: ['0 0', '60px 60px'],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
+      </div>
+
+      {/* Header */}
+      <motion.div
+        variants={headerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative z-40 border-b border-neutral-800 bg-neutral-900/50 backdrop-blur-xl"
+      >
+        <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link to="/admin/roles">
-                <Button variant="ghost" size="icon">
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.05, x: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center cursor-pointer hover:bg-neutral-700 transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5 text-neutral-400" />
+                </motion.div>
               </Link>
-              <div
-                className={`w-10 h-10 rounded-xl bg-gradient-to-br ${getRoleColor(role.name)} flex items-center justify-center shadow-lg`}
+              <motion.div
+                className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${getRoleColor(role.name)} flex items-center justify-center`}
+                whileHover={{ rotate: 5, scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <Shield className="w-5 h-5 text-white" />
-              </div>
+                <Shield className="w-6 h-6 text-white" />
+              </motion.div>
               <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold tracking-tight">{role.name}</h1>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold tracking-tight">{role.name}</h1>
                   {role.is_system && (
-                    <Badge variant="secondary">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-violet-500/10 text-violet-400 border border-violet-500/20">
                       <Sparkles className="w-3 h-3 mr-1" />
                       System
-                    </Badge>
+                    </span>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-neutral-400">
                   Edit role details and permissions
                 </p>
               </div>
             </div>
-            <Button
-              onClick={handleSaveRole}
-              disabled={!hasChanges || isSaving || role.is_system}
-              className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 shadow-lg shadow-violet-500/25"
-            >
-              {isSaving ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Save className="w-4 h-4 mr-2" />
+            <AnimatePresence>
+              {hasChanges && !role.is_system && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, x: 20 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                >
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      onClick={handleSaveRole}
+                      disabled={isSaving}
+                      className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white border-0"
+                    >
+                      {isSaving ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4 mr-2" />
+                      )}
+                      Save Changes
+                    </Button>
+                  </motion.div>
+                </motion.div>
               )}
-              Save Changes
-            </Button>
+            </AnimatePresence>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="container mx-auto px-6 py-8">
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400">
-            {error}
-          </div>
-        )}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-8">
+        {/* Error message */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 flex items-center gap-3"
+            >
+              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1">
-            <Card className="border-0 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
-              <CardHeader>
-                <CardTitle>Role Details</CardTitle>
-                <CardDescription>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        >
+          {/* Role Details Card */}
+          <motion.div variants={itemVariants} className="lg:col-span-1">
+            <div className="border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm overflow-hidden">
+              <div className="p-6 border-b border-neutral-800">
+                <h2 className="text-lg font-semibold text-neutral-100">Role Details</h2>
+                <p className="text-sm text-neutral-500 mt-1">
                   Basic information about this role
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </p>
+              </div>
+              <div className="p-6 space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Role Name</Label>
+                  <Label htmlFor="name" className="text-neutral-300">Role Name</Label>
                   <Input
                     id="name"
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
                     disabled={role.is_system}
+                    className="bg-neutral-800 border-neutral-700 text-neutral-50 placeholder:text-neutral-500 disabled:opacity-50"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description" className="text-neutral-300">Description</Label>
                   <Textarea
                     id="description"
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     disabled={role.is_system}
                     rows={4}
+                    className="bg-neutral-800 border-neutral-700 text-neutral-50 placeholder:text-neutral-500 disabled:opacity-50"
                   />
                 </div>
                 {role.is_system && (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-neutral-500">
                     System roles cannot be modified.
                   </p>
                 )}
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </div>
+          </motion.div>
 
-          <div className="lg:col-span-2">
-            <Card className="border-0 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
-              <CardHeader>
+          {/* Permissions Card */}
+          <motion.div variants={itemVariants} className="lg:col-span-2">
+            <div className="border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm overflow-hidden">
+              <div className="p-6 border-b border-neutral-800">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Key className="w-5 h-5" />
-                      Permissions
-                    </CardTitle>
-                    <CardDescription>
-                      {role.permissions?.length || 0} permissions assigned
-                    </CardDescription>
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      whileHover={{ rotate: 5, scale: 1.1 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                      className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center"
+                    >
+                      <Key className="w-5 h-5 text-neutral-400" />
+                    </motion.div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-neutral-100">Permissions</h2>
+                      <p className="text-sm text-neutral-500">
+                        {role.permissions?.length || 0} permissions assigned
+                      </p>
+                    </div>
                   </div>
                   {!role.is_system && (
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsPermissionDialogOpen(true)}
-                    >
-                      Manage Permissions
-                    </Button>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsPermissionDialogOpen(true)}
+                        className="bg-transparent border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-neutral-100 hover:border-neutral-600"
+                      >
+                        Manage Permissions
+                      </Button>
+                    </motion.div>
                   )}
                 </div>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div className="p-6">
                 {Object.keys(groupedPermissions).length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                      <Key className="w-6 h-6 text-slate-400" />
-                    </div>
-                    <p className="text-muted-foreground">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-12"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
+                      className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-neutral-800 flex items-center justify-center"
+                    >
+                      <Key className="w-8 h-8 text-neutral-600" />
+                    </motion.div>
+                    <p className="text-neutral-500">
                       No permissions assigned yet
                     </p>
-                  </div>
+                  </motion.div>
                 ) : (
                   <div className="space-y-6">
-                    {Object.entries(groupedPermissions).map(([resource, perms]) => (
-                      <div key={resource}>
-                        <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                    {Object.entries(groupedPermissions).map(([resource, perms], resourceIndex) => (
+                      <motion.div
+                        key={resource}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 * resourceIndex }}
+                      >
+                        <h4 className="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-3">
                           {resource}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                           {perms.map((perm) => (
-                            <Badge
+                            <motion.span
                               key={perm.id}
-                              variant="secondary"
-                              className="group cursor-default"
+                              whileHover={{ scale: 1.05 }}
+                              className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-neutral-800 text-neutral-300 border border-neutral-700 group/perm cursor-default"
                             >
                               {perm.action}
                               {perm.scope !== 'all' && (
-                                <span className="text-muted-foreground ml-1">
+                                <span className="text-neutral-500 ml-1">
                                   ({perm.scope})
                                 </span>
                               )}
                               {!role.is_system && (
-                                <button
+                                <motion.button
+                                  whileHover={{ scale: 1.2 }}
+                                  whileTap={{ scale: 0.9 }}
                                   onClick={() => handleRemovePermission(perm.id)}
-                                  className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  className="ml-2 opacity-0 group-hover/perm:opacity-100 transition-opacity hover:text-red-400"
                                   disabled={isSaving}
                                 >
-                                  <X className="w-3 h-3" />
-                                </button>
+                                  <X className="w-3.5 h-3.5" />
+                                </motion.button>
                               )}
-                            </Badge>
+                            </motion.span>
                           ))}
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       <PermissionAssignDialog
@@ -449,53 +606,55 @@ function PermissionAssignDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col bg-neutral-900 border-neutral-800 text-neutral-50">
         <DialogClose onClose={() => onOpenChange(false)} />
         <DialogHeader>
-          <DialogTitle>Manage Permissions</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-neutral-50">Manage Permissions</DialogTitle>
+          <DialogDescription className="text-neutral-400">
             Select the permissions to assign to this role.
           </DialogDescription>
         </DialogHeader>
 
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
           <Input
             placeholder="Search permissions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="pl-11 bg-neutral-800 border-neutral-700 text-neutral-50 placeholder:text-neutral-500"
           />
         </div>
 
         <div className="flex-1 overflow-y-auto space-y-6 pr-2">
           {Object.entries(groupedPermissions).map(([resource, perms]) => (
             <div key={resource}>
-              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 sticky top-0 bg-background py-1">
+              <h4 className="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-3 sticky top-0 bg-neutral-900 py-1">
                 {resource}
               </h4>
               <div className="space-y-2">
                 {perms.map((perm) => (
-                  <label
+                  <motion.label
                     key={perm.id}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+                    whileHover={{ x: 4, backgroundColor: 'rgba(255,255,255,0.02)' }}
+                    className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors"
                   >
                     <Checkbox
                       checked={selectedIds.has(perm.id)}
                       onCheckedChange={() => handleToggle(perm.id)}
+                      className="border-neutral-600 data-[state=checked]:bg-violet-500 data-[state=checked]:border-violet-500"
                     />
                     <div className="flex-1">
-                      <span className="font-medium">{perm.action}</span>
+                      <span className="font-medium text-neutral-200">{perm.action}</span>
                       {perm.scope !== 'all' && (
-                        <span className="text-muted-foreground ml-2">
+                        <span className="text-neutral-500 ml-2">
                           (scope: {perm.scope})
                         </span>
                       )}
                     </div>
                     {selectedIds.has(perm.id) && (
-                      <Check className="w-4 h-4 text-emerald-500" />
+                      <Check className="w-4 h-4 text-emerald-400" />
                     )}
-                  </label>
+                  </motion.label>
                 ))}
               </div>
             </div>
@@ -503,13 +662,25 @@ function PermissionAssignDialog({
         </div>
 
         <DialogFooter className="mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            Save Permissions
-          </Button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="bg-transparent border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-neutral-100"
+            >
+              Cancel
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white border-0"
+            >
+              {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Save Permissions
+            </Button>
+          </motion.div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
