@@ -4,6 +4,76 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.7.0] - 2026-01-03
+
+### Added - Phase 3: Full-Text Search Frontend (Tasks 3.7-3.10)
+
+Kompletna frontend implementacija za Document Management i Full-Text Search sa Motion.dev animacijama.
+
+- **Document API Client** (`lib/document-api.ts`) - Task 3.7:
+  - TypeScript tipovi za Document, SearchRequest, SearchResponse
+  - `getDocuments()`, `getDocument()`, `createDocument()`, `updateDocument()`, `deleteDocument()`
+  - `searchDocuments()`, `getSuggestions()`
+
+- **TanStack Query Hooks** (`hooks/useDocuments.ts`) - Task 3.7:
+  - `useDocuments()` - Lista dokumenata sa pagination
+  - `useDocument(id)` - Pojedinačni dokument
+  - `useCreateDocument()`, `useUpdateDocument()`, `useDeleteDocument()` - Mutations
+  - `useSearch()`, `useSearchSuggestions()` - Search hooks
+  - Query key factory pattern za cache invalidation
+
+- **Document List Page** (`routes/documents/index.tsx`) - Task 3.8:
+  - Grid/List view toggle sa Motion animacijama
+  - Staggered enter animacije za document cards
+  - Pagination sa animated buttons
+  - Sorting (created_at, updated_at, title)
+  - Create document dialog
+  - Delete confirmation dialog
+  - Hover effects i micro-interactions
+
+- **Document Detail/Edit Page** (`routes/documents/$documentId.tsx`) - Task 3.9:
+  - Document view sa metadata display
+  - Inline edit mode
+  - Save/Cancel sa loading states
+  - Delete confirmation
+  - Motion spring animacije
+
+- **Search Page** (`routes/search.tsx`) - Task 3.10:
+  - Full-text search sa 4 moda (simple, phrase, fuzzy, boolean)
+  - Search suggestions dropdown
+  - Filters panel (date range, owner)
+  - Search results sa highlighting
+  - Pagination
+  - Motion animacije za results
+
+- **SearchBar Component** (`components/SearchBar.tsx`) - Task 3.10:
+  - Reusable search input sa suggestions
+  - Keyboard navigation (Enter, Escape)
+  - Animated suggestions dropdown
+
+### UI/UX Features
+
+- **Motion.dev Animacije**:
+  - Staggered container/item variants
+  - Spring physics za hover effects
+  - AnimatePresence za mount/unmount
+  - whileHover, whileTap, whileInView gesturi
+  - Layout animations
+
+- **Dark Theme Design**:
+  - Neutral-950 background, neutral-50 text
+  - Gradient icons (blue-500 to cyan-500)
+  - Border hover effects
+  - Backdrop blur za sticky headers
+
+### Task Status
+- [x] Task 3.7 - Document API Client (COMPLETED)
+- [x] Task 3.8 - Document List Page (COMPLETED)
+- [x] Task 3.9 - Document Detail/Edit Page (COMPLETED)
+- [x] Task 3.10 - Search UI (COMPLETED)
+
+---
+
 ## [2.6.0] - 2026-01-03
 
 ### Added - Phase 3: Full-Text Search (Tasks 3.1-3.6)

@@ -708,16 +708,16 @@ Svaki task je označen sa:
 #### 3.7 [PAR] Document API Client
 **Estimated:** 2h  
 **Dependencies:** Phase 0 Frontend  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `lib/document-api.ts`:
+- [x] Kreirati `lib/document-api.ts`:
   - `getDocuments(params)`
   - `getDocument(id)`
   - `createDocument(data)`
   - `updateDocument(id, data)`
   - `deleteDocument(id)`
   - `searchDocuments(query, options)`
-- [ ] Kreirati TanStack Query hooks:
+- [x] Kreirati TanStack Query hooks:
   - `useDocuments()`
   - `useDocument(id)`
   - `useCreateDocument()`
@@ -726,43 +726,43 @@ Svaki task je označen sa:
 #### 3.8 [SEQ] Document List Page
 **Estimated:** 3h  
 **Dependencies:** 3.7  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `routes/documents/index.tsx`
-- [ ] Implementirati document table/grid view
-- [ ] Implementirati pagination
-- [ ] Implementirati sorting
-- [ ] Dodati create document button
-- [ ] Dodati delete action
+- [x] Kreirati `routes/documents/index.tsx`
+- [x] Implementirati document table/grid view
+- [x] Implementirati pagination
+- [x] Implementirati sorting
+- [x] Dodati create document button
+- [x] Dodati delete action
 
 #### 3.9 [PAR] Document Detail/Edit Page
 **Estimated:** 3h  
 **Dependencies:** 3.7  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `routes/documents/[id].tsx`
-- [ ] Implementirati document view
-- [ ] Implementirati edit mode
-- [ ] Implementirati metadata display/edit
-- [ ] Dodati delete confirmation
+- [x] Kreirati `routes/documents/$documentId.tsx`
+- [x] Implementirati document view
+- [x] Implementirati edit mode
+- [x] Implementirati metadata display/edit
+- [x] Dodati delete confirmation
 
 #### 3.10 [SEQ] Search UI
 **Estimated:** 4h  
 **Dependencies:** 3.7, 3.8  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `components/SearchBar.tsx`:
+- [x] Kreirati `components/SearchBar.tsx`:
   - Search input
   - Search mode selector (simple, phrase, fuzzy, boolean)
   - Search button
-- [ ] Kreirati `routes/search.tsx` - Search results page
-- [ ] Implementirati search results display
-- [ ] Implementirati result highlighting
-- [ ] Implementirati filters sidebar:
+- [x] Kreirati `routes/search.tsx` - Search results page
+- [x] Implementirati search results display
+- [x] Implementirati result highlighting
+- [x] Implementirati filters sidebar:
   - Date range
   - Owner
   - Custom metadata filters
-- [ ] Implementirati "no results" state
+- [x] Implementirati "no results" state
 
 ---
 
