@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from uuid import UUID
 
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.audit_log import AuditAction, AuditLog
@@ -34,22 +35,32 @@ class AuditService:
             ip_address: IP address of the requester
             user_agent: User agent string
         """
-        audit_log = AuditLog(
-            action=AuditAction.ROLE_ASSIGNED.value,
-            entity_type="user_role",
-            entity_id=str(target_user_id),
-            user_id=user_id,
-            target_user_id=target_user_id,
-            role_id=role_id,
-            details=json.dumps({
-                "role_id": str(role_id),
-                "target_user_id": str(target_user_id),
-                "timestamp": datetime.utcnow().isoformat(),
-            }),
-            ip_address=ip_address,
-            user_agent=user_agent,
+        await db.execute(
+            text("""
+                INSERT INTO audit_logs (
+                    action, entity_type, entity_id, user_id, target_user_id, role_id,
+                    details, ip_address, user_agent
+                ) VALUES (
+                    :action, :entity_type, :entity_id::text, :user_id, :target_user_id, :role_id,
+                    :details, :ip_address, :user_agent
+                )
+            """),
+            {
+                "action": AuditAction.ROLE_ASSIGNED.value,
+                "entity_type": "user_role",
+                "entity_id": str(target_user_id),
+                "user_id": user_id,
+                "target_user_id": target_user_id,
+                "role_id": role_id,
+                "details": json.dumps({
+                    "role_id": str(role_id),
+                    "target_user_id": str(target_user_id),
+                    "timestamp": datetime.utcnow().isoformat(),
+                }),
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+            }
         )
-        db.add(audit_log)
 
     @staticmethod
     async def log_role_removed(
@@ -71,22 +82,32 @@ class AuditService:
             ip_address: IP address of the requester
             user_agent: User agent string
         """
-        audit_log = AuditLog(
-            action=AuditAction.ROLE_REMOVED.value,
-            entity_type="user_role",
-            entity_id=str(target_user_id),
-            user_id=user_id,
-            target_user_id=target_user_id,
-            role_id=role_id,
-            details=json.dumps({
-                "role_id": str(role_id),
-                "target_user_id": str(target_user_id),
-                "timestamp": datetime.utcnow().isoformat(),
-            }),
-            ip_address=ip_address,
-            user_agent=user_agent,
+        await db.execute(
+            text("""
+                INSERT INTO audit_logs (
+                    action, entity_type, entity_id, user_id, target_user_id, role_id,
+                    details, ip_address, user_agent
+                ) VALUES (
+                    :action, :entity_type, :entity_id::text, :user_id, :target_user_id, :role_id,
+                    :details, :ip_address, :user_agent
+                )
+            """),
+            {
+                "action": AuditAction.ROLE_REMOVED.value,
+                "entity_type": "user_role",
+                "entity_id": str(target_user_id),
+                "user_id": user_id,
+                "target_user_id": target_user_id,
+                "role_id": role_id,
+                "details": json.dumps({
+                    "role_id": str(role_id),
+                    "target_user_id": str(target_user_id),
+                    "timestamp": datetime.utcnow().isoformat(),
+                }),
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+            }
         )
-        db.add(audit_log)
 
     @staticmethod
     async def log_role_created(
@@ -108,21 +129,31 @@ class AuditService:
             ip_address: IP address of the requester
             user_agent: User agent string
         """
-        audit_log = AuditLog(
-            action=AuditAction.ROLE_CREATED.value,
-            entity_type="role",
-            entity_id=str(role_id),
-            user_id=user_id,
-            role_id=role_id,
-            details=json.dumps({
-                "role_id": str(role_id),
-                "role_name": role_name,
-                "timestamp": datetime.utcnow().isoformat(),
-            }),
-            ip_address=ip_address,
-            user_agent=user_agent,
+        await db.execute(
+            text("""
+                INSERT INTO audit_logs (
+                    action, entity_type, entity_id, user_id, role_id,
+                    details, ip_address, user_agent
+                ) VALUES (
+                    :action, :entity_type, :entity_id::text, :user_id, :role_id,
+                    :details, :ip_address, :user_agent
+                )
+            """),
+            {
+                "action": AuditAction.ROLE_CREATED.value,
+                "entity_type": "role",
+                "entity_id": str(role_id),
+                "user_id": user_id,
+                "role_id": role_id,
+                "details": json.dumps({
+                    "role_id": str(role_id),
+                    "role_name": role_name,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }),
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+            }
         )
-        db.add(audit_log)
 
     @staticmethod
     async def log_role_updated(
@@ -144,21 +175,31 @@ class AuditService:
             ip_address: IP address of the requester
             user_agent: User agent string
         """
-        audit_log = AuditLog(
-            action=AuditAction.ROLE_UPDATED.value,
-            entity_type="role",
-            entity_id=str(role_id),
-            user_id=user_id,
-            role_id=role_id,
-            details=json.dumps({
-                "role_id": str(role_id),
-                "changes": changes,
-                "timestamp": datetime.utcnow().isoformat(),
-            }),
-            ip_address=ip_address,
-            user_agent=user_agent,
+        await db.execute(
+            text("""
+                INSERT INTO audit_logs (
+                    action, entity_type, entity_id, user_id, role_id,
+                    details, ip_address, user_agent
+                ) VALUES (
+                    :action, :entity_type, :entity_id::text, :user_id, :role_id,
+                    :details, :ip_address, :user_agent
+                )
+            """),
+            {
+                "action": AuditAction.ROLE_UPDATED.value,
+                "entity_type": "role",
+                "entity_id": str(role_id),
+                "user_id": user_id,
+                "role_id": role_id,
+                "details": json.dumps({
+                    "role_id": str(role_id),
+                    "changes": changes,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }),
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+            }
         )
-        db.add(audit_log)
 
     @staticmethod
     async def log_role_deleted(
@@ -180,21 +221,31 @@ class AuditService:
             ip_address: IP address of the requester
             user_agent: User agent string
         """
-        audit_log = AuditLog(
-            action=AuditAction.ROLE_DELETED.value,
-            entity_type="role",
-            entity_id=str(role_id),
-            user_id=user_id,
-            role_id=role_id,
-            details=json.dumps({
-                "role_id": str(role_id),
-                "role_name": role_name,
-                "timestamp": datetime.utcnow().isoformat(),
-            }),
-            ip_address=ip_address,
-            user_agent=user_agent,
+        await db.execute(
+            text("""
+                INSERT INTO audit_logs (
+                    action, entity_type, entity_id, user_id, role_id,
+                    details, ip_address, user_agent
+                ) VALUES (
+                    :action, :entity_type, :entity_id::text, :user_id, :role_id,
+                    :details, :ip_address, :user_agent
+                )
+            """),
+            {
+                "action": AuditAction.ROLE_DELETED.value,
+                "entity_type": "role",
+                "entity_id": str(role_id),
+                "user_id": user_id,
+                "role_id": role_id,
+                "details": json.dumps({
+                    "role_id": str(role_id),
+                    "role_name": role_name,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }),
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+            }
         )
-        db.add(audit_log)
 
     @staticmethod
     async def log_permission_assigned(
@@ -216,21 +267,31 @@ class AuditService:
             ip_address: IP address of the requester
             user_agent: User agent string
         """
-        audit_log = AuditLog(
-            action=AuditAction.PERMISSION_ASSIGNED.value,
-            entity_type="role_permission",
-            entity_id=str(role_id),
-            user_id=user_id,
-            role_id=role_id,
-            details=json.dumps({
-                "role_id": str(role_id),
-                "permission_id": str(permission_id),
-                "timestamp": datetime.utcnow().isoformat(),
-            }),
-            ip_address=ip_address,
-            user_agent=user_agent,
+        await db.execute(
+            text("""
+                INSERT INTO audit_logs (
+                    action, entity_type, entity_id, user_id, role_id,
+                    details, ip_address, user_agent
+                ) VALUES (
+                    :action, :entity_type, :entity_id::text, :user_id, :role_id,
+                    :details, :ip_address, :user_agent
+                )
+            """),
+            {
+                "action": AuditAction.PERMISSION_ASSIGNED.value,
+                "entity_type": "role_permission",
+                "entity_id": str(role_id),
+                "user_id": user_id,
+                "role_id": role_id,
+                "details": json.dumps({
+                    "role_id": str(role_id),
+                    "permission_id": str(permission_id),
+                    "timestamp": datetime.utcnow().isoformat(),
+                }),
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+            }
         )
-        db.add(audit_log)
 
     @staticmethod
     async def log_permission_removed(
@@ -252,21 +313,31 @@ class AuditService:
             ip_address: IP address of the requester
             user_agent: User agent string
         """
-        audit_log = AuditLog(
-            action=AuditAction.PERMISSION_REMOVED.value,
-            entity_type="role_permission",
-            entity_id=str(role_id),
-            user_id=user_id,
-            role_id=role_id,
-            details=json.dumps({
-                "role_id": str(role_id),
-                "permission_id": str(permission_id),
-                "timestamp": datetime.utcnow().isoformat(),
-            }),
-            ip_address=ip_address,
-            user_agent=user_agent,
+        await db.execute(
+            text("""
+                INSERT INTO audit_logs (
+                    action, entity_type, entity_id, user_id, role_id,
+                    details, ip_address, user_agent
+                ) VALUES (
+                    :action, :entity_type, :entity_id::text, :user_id, :role_id,
+                    :details, :ip_address, :user_agent
+                )
+            """),
+            {
+                "action": AuditAction.PERMISSION_REMOVED.value,
+                "entity_type": "role_permission",
+                "entity_id": str(role_id),
+                "user_id": user_id,
+                "role_id": role_id,
+                "details": json.dumps({
+                    "role_id": str(role_id),
+                    "permission_id": str(permission_id),
+                    "timestamp": datetime.utcnow().isoformat(),
+                }),
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+            }
         )
-        db.add(audit_log)
 
 
 def get_client_ip(request) -> str:

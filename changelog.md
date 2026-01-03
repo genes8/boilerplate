@@ -4,6 +4,71 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.8.1] - 2026-01-03
+
+### Fixed - User Management API & Audit Log Issues
+
+Ispravljene greške u User Management API i Audit log sistemu.
+
+- **GET /users Endpoint** (`app/api/v1/users.py`):
+  - Dodat `list_users` endpoint za listanje korisnika
+  - Pagination (page, page_size, total, total_pages)
+  - Search po email ili username
+  - Uključuje roles za svakog korisnika
+  - Zahteva `users:read:all` permission
+
+- **Audit Log SQLAlchemy Fix** (`app/services/audit.py`):
+  - Ispravljena SQLAlchemy greška u audit_logs insert-u
+  - PostgreSQL je pokušavao da konvertuje UUID string u VARCHAR kolonu u UUID tip
+  - Rešeno koristeći raw SQL sa eksplicitnim `::text` cast-om za `entity_id`
+  - Ispravljene sve audit log funkcije: log_role_assigned, log_role_removed, log_role_created, log_role_updated, log_role_deleted, log_permission_assigned, log_permission_removed
+
+- **Role Assignment Validation** (`app/api/v1/users.py`):
+  - Dodata validacija u `assign_user_role` endpoint
+  - Vraća 400 Bad Request ako korisnik već ima tu roli
+  - Poruka: "User already has the 'Role Name' role"
+
+### Fixed - TypeScript Route Path Warnings
+
+Ispravljene TypeScript greške za TanStack Router path-ove:
+- `frontend/src/routes/dashboard/index.tsx` - `/dashboard/' as string` → `/dashboard`
+- `frontend/src/routes/auth/forgot-password.tsx` - `/auth/forgot-password' as string` → `/auth/forgot-password`
+
+---
+
+## [2.8.0] - 2026-01-03
+
+### Changed - Dashboard Page Redesign
+
+Kompletno redizajniran Dashboard sa Motion.dev animacijama, usklađen sa estetikom ostalih stranica.
+
+- **Dark Theme Design**:
+  - Neutral-950 background sa animated grid overlay
+  - Konzistentna paleta boja sa landing page i documents stranicama
+  - Gradient ikone (blue-cyan, violet-purple, amber-orange, emerald-teal)
+
+- **Motion.dev Animacije**:
+  - Staggered container/item variants za stats kartice
+  - Spring physics animacije (stiffness: 100, damping: 15)
+  - Header slide-in animacija
+  - whileHover efekti na svim interaktivnim elementima
+  - Animated background grid (30s loop)
+  - Sidebar elementi sa x-axis slide-in
+
+- **UI Komponente**:
+  - **Stats Grid** - 4 kartice sa gradient ikonama, change indicators (ArrowUpRight/ArrowDownRight)
+  - **Quick Actions** - Linkovi ka Documents, Search, Users, Roles sa hover efektima
+  - **Activity Overview** - Placeholder za chart integraciju
+  - **Recent Activity** - Lista aktivnosti sa status indikatorima
+  - **Pro Tip Card** - Gradient card sa keyboard shortcut info
+  - **Create Document** - Dashed border CTA card
+
+- **Navigacija**:
+  - Quick Actions linkovi ka /documents, /search, /admin/users, /admin/roles
+  - Create Document link ka /documents
+
+---
+
 ## [2.7.0] - 2026-01-03
 
 ### Added - Phase 3: Full-Text Search Frontend (Tasks 3.7-3.10)

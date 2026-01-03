@@ -536,10 +536,13 @@ Svaki task je označen sa:
 **Assignee:** ✅ Completed
 
 - [x] Dodati u `api/v1/users.py`:
+  - `GET /users` - List users (sa pagination i search)
   - `GET /users/{id}/roles` - Get user roles
-  - `POST /users/{id}/roles` - Assign role
+  - `POST /users/{id}/roles` - Assign role (sa validacijom za duplikate)
   - `DELETE /users/{id}/roles/{role_id}` - Remove role
+  - `POST /users/bulk/roles` - Bulk dodela uloge
 - [x] Implementirati audit logging za role changes
+- [x] Dodati validaciju za duplicirane role (400 Bad Request)
 
 #### 2.7 [SEQ] Seed Default Roles & Permissions
 **Estimated:** 2h  

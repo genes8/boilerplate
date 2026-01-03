@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Mail, ArrowLeft, Sparkles, CheckCircle2 } from 'lucide-react'
 
-export const Route = createFileRoute('/auth/forgot-password' as string)({
+export const Route = createFileRoute('/auth/forgot-password')({
   component: ForgotPasswordPage,
 })
 
