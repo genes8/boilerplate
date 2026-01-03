@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff, Lock, Sparkles, CheckCircle2, XCircle, Check, X } from 'lucide-react'
 
-export const Route = createFileRoute('/auth/reset-password' as string)({
+export const Route = createFileRoute('/auth/reset-password')({
   component: ResetPasswordPage,
   validateSearch: (search: Record<string, unknown>) => ({
     token: (search.token as string) || '',
