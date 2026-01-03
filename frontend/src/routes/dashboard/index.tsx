@@ -18,8 +18,7 @@ import {
   Zap,
   Activity,
   ArrowUpRight,
-  ArrowDownRight,
-  Plus
+  ArrowDownRight
 } from 'lucide-react'
 
 export const Route = createFileRoute('/dashboard/')({
@@ -394,7 +393,7 @@ function DashboardContent() {
               className="relative overflow-hidden border border-neutral-800 bg-gradient-to-br from-blue-500/10 via-cyan-500/5 to-transparent p-6"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-              
+
               <div className="relative">
                 <div className="flex items-center gap-3 mb-4">
                   <motion.div
@@ -415,32 +414,6 @@ function DashboardContent() {
                   to open the command palette.
                 </p>
               </div>
-            </motion.div>
-
-            {/* Create New */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7, type: 'spring', stiffness: 100, damping: 15 }}
-            >
-              <Link to="/documents" params={{}}>
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group flex items-center justify-between p-4 border border-dashed border-neutral-700 hover:border-neutral-600 bg-neutral-900/20 cursor-pointer transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-neutral-800 group-hover:bg-neutral-700 flex items-center justify-center transition-colors">
-                      <Plus className="w-5 h-5 text-neutral-400" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm group-hover:text-neutral-200 transition-colors">Create Document</p>
-                      <p className="text-xs text-neutral-500">Start something new</p>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-neutral-600 group-hover:text-neutral-400 transition-colors" />
-                </motion.div>
-              </Link>
             </motion.div>
           </div>
         </div>
