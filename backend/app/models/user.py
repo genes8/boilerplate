@@ -2,11 +2,16 @@
 
 from datetime import datetime
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, Index, String, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import BaseModel
+from app.models.user_role import UserRole
+
+if TYPE_CHECKING:
+    from app.models.role import Role
 
 
 class AuthProvider(str, Enum):
@@ -87,6 +92,16 @@ class User(BaseModel):
     last_login_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,
+    )
+
+    # Relationships
+    roles: Mapped[list["Role"]] = relationship(
+        "Role",
+        secondary="user_roles",
+        primaryjoin="User.id == UserRole.user_id",
+        secondaryjoin="foreign(UserRole.role_id) == Role.id",
+        lazy="selectin",
+        viewonly=True,
     )
 
     # Indexes

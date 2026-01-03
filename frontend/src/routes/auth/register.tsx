@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
 import { Eye, EyeOff, Lock, Mail, User, ArrowRight, Sparkles, Check, X } from 'lucide-react'
 
-export const Route = createFileRoute('/auth/register' as string)({
+export const Route = createFileRoute('/auth/register')({
   component: RegisterPage,
 })
 

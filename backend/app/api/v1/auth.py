@@ -311,6 +311,61 @@ async def get_me(
     return current_user
 
 
+@router.get(
+    "/me/permissions",
+    summary="Get current user permissions and roles",
+)
+async def get_my_permissions(
+    current_user: CurrentActiveUser,
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> dict:
+    """
+    Get current user's permissions and roles.
+
+    Returns a list of permissions and role names for the authenticated user.
+    Used by frontend for permission-based UI rendering.
+    """
+    from app.models.permission import Permission
+    from app.models.role import Role
+    from app.models.role_permission import RolePermission
+    from app.models.user_role import UserRole
+
+    # Get user's roles
+    roles_result = await db.execute(
+        select(Role)
+        .join(UserRole, UserRole.role_id == Role.id)
+        .where(UserRole.user_id == current_user.id)
+    )
+    user_roles = roles_result.scalars().all()
+    role_names = [role.name for role in user_roles]
+
+    # Get permissions for all user's roles
+    if user_roles:
+        role_ids = [role.id for role in user_roles]
+        permissions_result = await db.execute(
+            select(Permission)
+            .join(RolePermission, RolePermission.permission_id == Permission.id)
+            .where(RolePermission.role_id.in_(role_ids))
+            .distinct()
+        )
+        permissions = permissions_result.scalars().all()
+    else:
+        permissions = []
+
+    return {
+        "permissions": [
+            {
+                "id": str(p.id),
+                "resource": p.resource,
+                "action": p.action,
+                "scope": p.scope,
+            }
+            for p in permissions
+        ],
+        "roles": role_names,
+    }
+
+
 @router.post(
     "/change-password",
     response_model=MessageResponse,

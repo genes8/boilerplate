@@ -108,6 +108,12 @@ Svaki task je označen sa:
 - [x] Postaviti Tailwind CSS
 - [x] Instalirati i konfigurisati shadcn/ui
 - [x] Kreirati bazni layout (`__root.tsx`)
+- [x] Landing Page Redesign:
+  - Editorial/Industrial estetika (crno-bela paleta)
+  - Motion biblioteka za animacije
+  - Staggered enter animacije
+  - Scroll-triggered animacije
+  - Hover gesturi i micro-interactions
 
 #### 0.4 [PAR] Docker Development Environment
 **Estimated:** 2h  
@@ -460,144 +466,144 @@ Svaki task je označen sa:
 #### 2.1 [SEQ] RBAC Models & Migrations
 **Estimated:** 3h  
 **Dependencies:** Phase 1  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `models/role.py`:
+- [x] Kreirati `models/role.py`:
   - Role model (id, name, description, is_system)
-- [ ] Kreirati `models/permission.py`:
+- [x] Kreirati `models/permission.py`:
   - Permission model (id, resource, action, scope)
-- [ ] Kreirati `models/role_permission.py`:
+- [x] Kreirati `models/role_permission.py`:
   - Many-to-many relationship
-- [ ] Kreirati `models/user_role.py`:
+- [x] Kreirati `models/user_role.py`:
   - User-Role relationship sa assigned_at, assigned_by
-- [ ] Kreirati Alembic migracije
-- [ ] Primeniti migracije
+- [x] Kreirati Alembic migracije
+- [x] Primeniti migracije
 
 #### 2.2 [SEQ] RBAC Schemas
 **Estimated:** 1h  
 **Dependencies:** 2.1  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `schemas/role.py`:
+- [x] Kreirati `schemas/role.py`:
   - RoleCreate, RoleUpdate, RoleResponse
-- [ ] Kreirati `schemas/permission.py`:
+- [x] Kreirati `schemas/permission.py`:
   - PermissionCreate, PermissionResponse
-- [ ] Kreirati `schemas/user_role.py`:
+- [x] Kreirati `schemas/user_role.py`:
   - UserRoleAssign, UserRoleResponse
 
 #### 2.3 [SEQ] Permission Checking Service
 **Estimated:** 3h  
 **Dependencies:** 2.1  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `services/rbac.py`:
+- [x] Kreirati `services/rbac.py`:
   - `has_permission(user, resource, action) -> bool`
   - `get_user_permissions(user) -> List[Permission]`
   - `get_user_roles(user) -> List[Role]`
-- [ ] Implementirati permission caching u Redis
-- [ ] Implementirati wildcard permissions (`*`)
-- [ ] Implementirati scope checking (own, team, all)
-- [ ] Napisati unit testove
+- [x] Implementirati permission caching u Redis
+- [x] Implementirati wildcard permissions (`*`)
+- [x] Implementirati scope checking (own, team, all)
+- [x] Napisati unit testove
 
 #### 2.4 [SEQ] Permission Dependencies
 **Estimated:** 2h  
 **Dependencies:** 2.3  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `require_permission(resource, action)` dependency factory
-- [ ] Kreirati `require_role(role_name)` dependency
-- [ ] Kreirati `require_any_permission(permissions)` dependency
-- [ ] Integrirati sa existing auth dependencies
+- [x] Kreirati `require_permission(resource, action)` dependency factory
+- [x] Kreirati `require_role(role_name)` dependency
+- [x] Kreirati `require_any_permission(permissions)` dependency
+- [x] Integrirati sa existing auth dependencies
 
 #### 2.5 [SEQ] RBAC API Endpoints
 **Estimated:** 4h  
 **Dependencies:** 2.2, 2.4  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `api/v1/roles.py`:
+- [x] Kreirati `api/v1/roles.py`:
   - `GET /roles` - List all roles
   - `POST /roles` - Create role (admin only)
   - `GET /roles/{id}` - Get role details
   - `PUT /roles/{id}` - Update role
   - `DELETE /roles/{id}` - Delete role (non-system only)
-- [ ] Kreirati `api/v1/permissions.py`:
+- [x] Kreirati `api/v1/permissions.py`:
   - `GET /permissions` - List all permissions
-- [ ] Napisati integration testove
+- [x] Napisati integration testove
 
 #### 2.6 [SEQ] User Role Management API
 **Estimated:** 2h  
 **Dependencies:** 2.5  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Dodati u `api/v1/users.py`:
+- [x] Dodati u `api/v1/users.py`:
   - `GET /users/{id}/roles` - Get user roles
   - `POST /users/{id}/roles` - Assign role
   - `DELETE /users/{id}/roles/{role_id}` - Remove role
-- [ ] Implementirati audit logging za role changes
+- [x] Implementirati audit logging za role changes
 
 #### 2.7 [SEQ] Seed Default Roles & Permissions
 **Estimated:** 2h  
 **Dependencies:** 2.1  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `scripts/seed_rbac.py`
-- [ ] Definisati default roles:
+- [x] Kreirati `core/seed_rbac.py`
+- [x] Definisati default roles:
   - Super Admin
   - Admin
   - Manager
   - User
   - Viewer
-- [ ] Definisati default permissions za svaki resource
-- [ ] Kreirati Alembic data migration za seeding
+- [x] Definisati default permissions za svaki resource
+- [x] Integrirati sa init_db.py za automatic seeding
 
 ### Frontend Tasks
 
 #### 2.8 [PAR] Permission Hook
 **Estimated:** 2h  
 **Dependencies:** Phase 1 Frontend  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `hooks/usePermissions.ts`:
+- [x] Kreirati `hooks/usePermissions.ts`:
   - `hasPermission(resource, action) -> boolean`
   - `hasRole(roleName) -> boolean`
   - `permissions` - lista svih permissions
-- [ ] Fetch permissions on auth
-- [ ] Cache permissions
+- [x] Fetch permissions on auth
+- [x] Cache permissions
 
 #### 2.9 [PAR] Permission Components
 **Estimated:** 2h  
 **Dependencies:** 2.8  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `components/CanAccess.tsx`:
+- [x] Kreirati `components/CanAccess.tsx`:
   ```tsx
   <CanAccess permission="users:create">
     <CreateUserButton />
   </CanAccess>
   ```
-- [ ] Kreirati `components/RequireRole.tsx`
-- [ ] Implementirati fallback rendering
+- [x] Kreirati `components/RequireRole.tsx`
+- [x] Implementirati fallback rendering
 
 #### 2.10 [SEQ] Admin - Role Management UI
 **Estimated:** 4h  
 **Dependencies:** 2.5, 2.8, 2.9  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati `routes/admin/roles/index.tsx` - Role list
-- [ ] Kreirati `routes/admin/roles/[id].tsx` - Role details/edit
-- [ ] Implementirati role creation form
-- [ ] Implementirati permission assignment UI
-- [ ] Implementirati role deletion (sa confirmation)
+- [x] Kreirati `routes/admin/roles/index.tsx` - Role list
+- [x] Kreirati `routes/admin/roles/[id].tsx` - Role details/edit
+- [x] Implementirati role creation form
+- [x] Implementirati permission assignment UI
+- [x] Implementirati role deletion (sa confirmation)
 
 #### 2.11 [SEQ] Admin - User Role Assignment UI
 **Estimated:** 3h  
 **Dependencies:** 2.6, 2.10  
-**Assignee:** _____________
+**Assignee:** ✅ Completed
 
-- [ ] Kreirati user management page
-- [ ] Implementirati role assignment dropdown/modal
-- [ ] Prikazati current roles za svakog usera
-- [ ] Implementirati bulk role assignment
+- [x] Kreirati user management page
+- [x] Implementirati role assignment dropdown/modal
+- [x] Prikazati current roles za svakog usera
+- [x] Implementirati bulk role assignment
 
 ---
 

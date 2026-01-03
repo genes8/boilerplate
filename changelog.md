@@ -4,6 +4,221 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.5.0] - 2026-01-03
+
+### Changed - Landing Page Redesign
+
+Kompletno redizajnirana landing page sa modernim UI i Motion animacijama.
+
+- **Estetika** - Editorial/Industrial dizajn:
+  - Crno-bela paleta (neutral-950 background, neutral-50 text)
+  - Drastična tipografija (7xl-9xl naslov)
+  - Asimetričan layout sa generošnim whitespace-om
+  - Uklonjeni ljubičasti gradijenti
+
+- **Motion Animacije**:
+  - Instalirana `motion` biblioteka (v12.23.26)
+  - Staggered enter animacije za hero section
+  - Scroll-triggered animacije za features i tech stack
+  - Spring physics animacije
+  - Hover gesturi (whileHover, whileTap, whileInView)
+  - Animirani background grid
+
+- **UI Komponente**:
+  - Badge sa pulse indicator
+  - Stats section sa hover efekti
+  - Feature cards sa gradient hover efekti
+  - Tech stack section sa micro-interactions
+  - CTA section sa scale animacijama
+
+- **Ispravke**:
+  - Uklonjen `as string` cast iz auth/register i auth/login ruta
+  - Ispravljene TypeScript greške za Motion variants
+  - Dodat `params={{}}` za sve Link komponente
+  - Ispravljena vidljivost "Create Account" dugmeta
+
+---
+
+## [2.4.1] - 2026-01-03
+
+### Changed - DEVELOPMENT_PHASES.md Updated
+
+Ažuriran status taskova u Phase 2 Frontend (Tasks 2.8-2.11).
+
+- **Task 2.8** - Permission Hook (COMPLETED)
+- **Task 2.9** - Permission Components (COMPLETED)
+- **Task 2.10** - Admin Role Management UI (COMPLETED)
+- **Task 2.11** - Admin User Role Assignment UI (COMPLETED)
+
+Svi Phase 2 taskovi su sada označeni kao completed.
+
+---
+
+## [2.4.0] - 2026-01-03
+
+### Added - Phase 2: RBAC Frontend (Tasks 2.8-2.11)
+
+Kompletna frontend implementacija za RBAC sistem.
+
+- **RBAC API Client** (lib/rbac-api.ts):
+  - TypeScript tipovi za Role, Permission, UserRole, UserWithRoles
+  - API funkcije za roles CRUD, permissions, user roles
+  - Bulk role assignment support
+
+- **Permission Hook** (Task 2.8):
+  - `hooks/usePermissions.ts` - Custom hook za permission checking
+  - `hasPermission(resource, action, scope)` - Provera pojedinačne dozvole
+  - `hasAnyPermission()` / `hasAllPermissions()` - Bulk provere
+  - `hasRole()` / `hasAnyRole()` - Provera uloga
+  - `isAdmin()` / `isSuperAdmin()` - Helper metode
+  - Automatic fetch on auth, scope hierarchy support
+
+- **Permission Components** (Task 2.9):
+  - `components/CanAccess.tsx` - Conditional rendering based on permissions
+    - Support za permission string format (`users:create`)
+    - Support za resource/action/scope props
+    - Support za `any` i `all` permission checks
+    - Fallback rendering
+  - `components/RequireRole.tsx` - Conditional rendering based on roles
+    - Single role ili multiple roles check
+    - `requireAll` option za AND logic
+    - Fallback rendering
+
+- **Admin Role Management UI** (Task 2.10):
+  - `routes/admin/roles/index.tsx` - Role list stranica
+    - Grid prikaz sa role cards
+    - Search functionality
+    - Create role dialog
+    - Delete role confirmation
+    - Role color coding
+  - `routes/admin/roles/$roleId.tsx` - Role details/edit stranica
+    - Edit role name i description
+    - Permission management dialog
+    - Grouped permissions by resource
+    - Add/remove permissions
+    - System role protection
+
+- **Admin User Role Assignment UI** (Task 2.11):
+  - `routes/admin/users/index.tsx` - User management stranica
+    - Paginated user table
+    - Search by email/username
+    - User status badges (Active, Verified)
+    - Current roles display
+    - Add role dialog per user
+    - Remove role inline
+    - Bulk role assignment za selected users
+    - Checkbox selection
+
+- **UI Components**:
+  - `components/ui/dialog.tsx` - Modal dialog komponenta
+  - `components/ui/badge.tsx` - Badge sa variants (success, warning, info)
+  - `components/ui/select.tsx` - Select dropdown komponenta
+  - `components/ui/textarea.tsx` - Textarea komponenta
+
+- **Backend Enhancement**:
+  - `GET /api/v1/auth/me/permissions` - Endpoint za frontend permission checking
+  - Vraća permissions i roles za trenutnog korisnika
+
+### Task Status
+- [x] Task 2.8 - Permission Hook (COMPLETED)
+- [x] Task 2.9 - Permission Components (COMPLETED)
+- [x] Task 2.10 - Admin Role Management UI (COMPLETED)
+- [x] Task 2.11 - Admin User Role Assignment UI (COMPLETED)
+
+---
+
+## [2.3.0] - 2026-01-03
+
+### Added - Phase 2: RBAC (Role-Based Access Control)
+
+Kompletna implementacija RBAC sistema za upravljanje ulogama i dozvolama.
+
+- **RBAC Models** (Task 2.1):
+  - `app/models/role.py` - Role model (id, name, description, is_system)
+  - `app/models/permission.py` - Permission model (resource, action, scope)
+  - `app/models/role_permission.py` - Many-to-many Role-Permission relationship
+  - `app/models/user_role.py` - User-Role relationship sa assigned_at, assigned_by
+  - Alembic migracija `001_create_rbac_tables.py`
+
+- **RBAC Schemas** (Task 2.2):
+  - `app/schemas/role.py` - RoleCreate, RoleUpdate, RoleResponse, RoleListResponse
+  - `app/schemas/permission.py` - PermissionCreate, PermissionResponse, PermissionAssign
+  - `app/schemas/user_role.py` - UserRoleAssign, UserRoleBulkAssign, UserRolesResponse
+
+- **Permission Checking Service** (Task 2.3):
+  - `app/services/rbac.py` - RBACService klasa sa:
+    - `has_permission()` - Provera pojedinačne dozvole
+    - `has_any_permission()` / `has_all_permissions()` - Bulk provere
+    - `has_role()` / `has_any_role()` - Provera uloga
+    - `is_admin()` / `is_super_admin()` - Helper metode
+    - Redis caching za permissions (5 min TTL)
+  - CRUD operacije za Role i Permission
+
+- **Permission Dependencies** (Task 2.4):
+  - `app/api/deps.py` - Prošireno sa:
+    - `require_permission(resource, action, scope)` - Dependency factory
+    - `require_role(role_name)` - Role-based dependency
+    - `require_any_role(role_names)` - Any role dependency
+    - `require_any_permission(permissions)` - Any permission dependency
+    - `RequireAdmin` / `RequireSuperAdmin` - Predefinisane dependencies
+    - `RBACServiceDep` - Type alias za RBAC service injection
+
+- **RBAC API Endpoints** (Task 2.5):
+  - `app/api/v1/roles.py`:
+    - `GET /roles` - Lista svih uloga
+    - `POST /roles` - Kreiranje nove uloge
+    - `GET /roles/{id}` - Detalji uloge
+    - `PUT /roles/{id}` - Ažuriranje uloge
+    - `DELETE /roles/{id}` - Brisanje uloge (samo non-system)
+    - `POST /roles/{id}/permissions` - Dodela dozvola ulozi
+    - `DELETE /roles/{id}/permissions/{perm_id}` - Uklanjanje dozvole
+  - `app/api/v1/permissions.py`:
+    - `GET /permissions` - Lista svih dozvola
+
+- **User Role Management API** (Task 2.6):
+  - `app/api/v1/users.py`:
+    - `GET /users/{id}/roles` - Uloge korisnika
+    - `POST /users/{id}/roles` - Dodela uloge korisniku
+    - `DELETE /users/{id}/roles/{role_id}` - Uklanjanje uloge
+    - `POST /users/bulk/roles` - Bulk dodela uloge
+
+- **Seed Default Roles & Permissions** (Task 2.7):
+  - `app/core/seed_rbac.py` - Seeding funkcije sa:
+    - 30+ default permissions (users, roles, documents, labels, watch_folders)
+    - 5 default roles: Super Admin, Admin, Manager, User, Viewer
+    - Scope hierarchy: own < team < all
+    - Wildcard permissions support (*)
+  - `app/core/init_db.py` - Ažurirano da:
+    - Automatski seed-uje RBAC podatke pri startu
+    - Dodeljuje Super Admin rolu superadmin korisniku
+
+- **Permission Scopes**:
+  - `own` - Pristup samo sopstvenim resursima
+  - `team` - Pristup resursima tima
+  - `all` - Pristup svim resursima
+
+- **Default Roles**:
+  - **Super Admin** - Pun pristup sistemu (wildcard *)
+  - **Admin** - Upravljanje korisnicima, ulogama, dokumentima
+  - **Manager** - Team-level pristup dokumentima
+  - **User** - Pristup sopstvenim resursima
+  - **Viewer** - Read-only pristup sopstvenim resursima
+
+- **Audit Logging** (Task 2.6):
+  - `app/models/audit_log.py` - AuditLog model sa AuditAction enum
+  - `app/services/audit.py` - AuditService za logging role changes
+  - `app/api/v1/users.py` - Integrisan audit logging za role assignment/removal
+  - Alembic migracija `002_add_audit_logs.py`
+  - Logging IP adrese i user agent-a
+  - Audit log entries za: role_assigned, role_removed, role_created, role_updated, role_deleted, permission_assigned, permission_removed
+
+- **Testing** (Tasks 2.3, 2.5):
+  - `tests/test_rbac_service.py` - Unit testovi za RBACService (13 testova)
+  - `tests/test_rbac_api.py` - Integration testovi za RBAC API (17 testova)
+  - Testovi pokrivaju: permission checking, wildcard permissions, scope hierarchy, role checks, CRUD operacije, audit logging
+
+---
+
 ## [2.2.0] - 2026-01-02
 
 ### Changed - HTTP-only Cookie Authentication
