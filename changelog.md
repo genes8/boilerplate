@@ -4,13 +4,38 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.2.0] - 2026-01-02
+
+### Changed - HTTP-only Cookie Authentication
+
+Migracija sa localStorage na HTTP-only cookies za sigurnije čuvanje tokena.
+
+- **Backend Changes**:
+  - `app/core/cookies.py` - Cookie utility funkcije (set_auth_cookies, clear_auth_cookies)
+  - `app/config.py` - Dodati COOKIE_DOMAIN, COOKIE_SECURE, COOKIE_SAMESITE settings
+  - `app/api/deps.py` - Ažuriran da čita token iz cookies ili Authorization header
+  - `app/api/v1/auth.py` - Login, refresh, logout endpoints postavljaju/brišu cookies
+  - `app/api/v1/oidc.py` - OIDC callback postavlja cookies
+
+- **Frontend Changes**:
+  - `lib/api.ts` - API client sa `credentials: 'include'` za slanje cookies
+  - `lib/auth-api.ts` - Uklonjen tokenStorage, koristi cookies
+  - `lib/auth-context.tsx` - Uklonjen tokenStorage dependency
+
+- **Security Improvements**:
+  - Tokeni nisu dostupni JavaScript-u (XSS protection)
+  - HTTP-only cookies sa SameSite policy
+  - Secure flag za HTTPS u produkciji
+  - Refresh token cookie ograničen na `/api/v1/auth` path
+
+---
+
 ## [2.1.0] - 2026-01-02
 
 ### Added - Phase 1: Authentication Module (Frontend Tasks 1.10-1.15)
 
 - **Auth API Client** (Task 1.10):
   - `lib/api.ts` - Fetch wrapper sa automatic auth headers
-  - Token storage (localStorage) sa `tokenStorage` utility
   - Automatic token refresh na 401 response
   - `lib/auth-api.ts` - Auth API funkcije (login, register, logout, refresh, etc.)
 

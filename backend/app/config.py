@@ -45,6 +45,20 @@ class Settings(BaseSettings):
         description="JWT refresh token expiration in days",
     )
 
+    # Cookie Settings
+    COOKIE_DOMAIN: str | None = Field(
+        default=None,
+        description="Cookie domain (None for localhost)",
+    )
+    COOKIE_SECURE: bool = Field(
+        default=False,
+        description="Use secure cookies (HTTPS only)",
+    )
+    COOKIE_SAMESITE: str = Field(
+        default="lax",
+        description="Cookie SameSite policy (strict, lax, none)",
+    )
+
     # Super Admin
     SUPERADMIN_EMAIL: str | None = Field(
         default=None,

@@ -3,11 +3,12 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Cookie, Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.cookies import ACCESS_TOKEN_COOKIE
 from app.core.database import get_db
 from app.models.user import User
 from app.schemas.auth import TokenPayload
@@ -17,7 +18,34 @@ from app.services.jwt import decode_token, is_token_expired
 security = HTTPBearer(auto_error=False)
 
 
+def get_token_from_request(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials | None,
+) -> str | None:
+    """
+    Extract token from request - first check cookies, then Authorization header.
+
+    Args:
+        request: FastAPI request object.
+        credentials: HTTP Bearer credentials (optional).
+
+    Returns:
+        str | None: The token or None if not found.
+    """
+    # First, try to get token from HTTP-only cookie
+    token = request.cookies.get(ACCESS_TOKEN_COOKIE)
+    if token:
+        return token
+
+    # Fallback to Authorization header (for API clients)
+    if credentials:
+        return credentials.credentials
+
+    return None
+
+
 async def get_current_user(
+    request: Request,
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> User:
@@ -34,14 +62,15 @@ async def get_current_user(
     Raises:
         HTTPException: If token is invalid, expired, or user not found.
     """
-    if credentials is None:
+    token = get_token_from_request(request, credentials)
+
+    if token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token = credentials.credentials
     token_payload = decode_token(token)
 
     if token_payload is None:
@@ -112,6 +141,7 @@ async def get_current_active_user(
 
 
 async def get_optional_user(
+    request: Request,
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> User | None:
@@ -121,16 +151,17 @@ async def get_optional_user(
     This dependency does not raise an exception if the user is not authenticated.
 
     Args:
+        request: FastAPI request object.
         credentials: HTTP Bearer credentials.
         db: Database session.
 
     Returns:
         User | None: The authenticated user or None.
     """
-    if credentials is None:
+    token = get_token_from_request(request, credentials)
+    if token is None:
         return None
 
-    token = credentials.credentials
     token_payload = decode_token(token)
 
     if token_payload is None or token_payload.type != "access":

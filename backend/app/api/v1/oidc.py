@@ -4,12 +4,13 @@ import secrets
 from datetime import datetime, timezone
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
+from app.core.cookies import set_auth_cookies
 from app.core.database import get_db
 from app.core.redis import RedisCache, redis_client
 from app.models.user import AuthProvider, User
@@ -84,6 +85,7 @@ async def oidc_authorize() -> RedirectResponse:
     response_model=TokenResponse,
 )
 async def oidc_callback(
+    response: Response,
     code: Annotated[str, Query(description="Authorization code")],
     state: Annotated[str, Query(description="State parameter")],
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -151,6 +153,9 @@ async def oidc_callback(
 
     # Store refresh token
     await store_refresh_token(user.id, refresh_token)
+
+    # Set HTTP-only cookies
+    set_auth_cookies(response, access_token, refresh_token)
 
     return TokenResponse(
         access_token=access_token,

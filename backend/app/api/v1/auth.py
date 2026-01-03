@@ -4,11 +4,12 @@ from datetime import datetime, timezone
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import CurrentActiveUser
+from app.core.cookies import REFRESH_TOKEN_COOKIE, clear_auth_cookies, set_auth_cookies
 from app.core.database import get_db
 from app.core.rate_limit import (
     login_rate_limiter,
@@ -106,6 +107,7 @@ async def register(
 )
 async def login(
     request: Request,
+    response: Response,
     credentials: UserLogin,
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> TokenResponse:
@@ -165,6 +167,9 @@ async def login(
         client_ip = forwarded_for.split(",")[0].strip()
     await reset_rate_limit(client_ip, "login")
 
+    # Set HTTP-only cookies
+    set_auth_cookies(response, access_token, refresh_token)
+
     return TokenResponse(
         access_token=access_token,
         refresh_token=refresh_token,
@@ -179,16 +184,31 @@ async def login(
     summary="Refresh access token",
 )
 async def refresh_token(
-    request: RefreshTokenRequest,
+    request: Request,
+    response: Response,
     db: Annotated[AsyncSession, Depends(get_db)],
+    token_request: RefreshTokenRequest | None = None,
 ) -> TokenResponse:
     """
     Refresh access token using refresh token.
 
-    - **refresh_token**: Valid refresh token
+    Token can be provided via:
+    - HTTP-only cookie (preferred)
+    - Request body: **refresh_token**
     """
+    # Get refresh token from cookie or request body
+    refresh_token_value = request.cookies.get(REFRESH_TOKEN_COOKIE)
+    if not refresh_token_value and token_request:
+        refresh_token_value = token_request.refresh_token
+
+    if not refresh_token_value:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="No refresh token provided",
+        )
+
     # Decode refresh token
-    token_payload = decode_token(request.refresh_token)
+    token_payload = decode_token(refresh_token_value)
 
     if token_payload is None:
         raise HTTPException(
@@ -218,7 +238,7 @@ async def refresh_token(
         )
 
     # Validate refresh token against stored token
-    is_valid = await validate_refresh_token(user_id, request.refresh_token)
+    is_valid = await validate_refresh_token(user_id, refresh_token_value)
     if not is_valid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -241,6 +261,9 @@ async def refresh_token(
     # Store new refresh token
     await store_refresh_token(user.id, new_refresh_token)
 
+    # Set HTTP-only cookies
+    set_auth_cookies(response, access_token, new_refresh_token)
+
     return TokenResponse(
         access_token=access_token,
         refresh_token=new_refresh_token,
@@ -255,6 +278,7 @@ async def refresh_token(
     summary="Logout and invalidate tokens",
 )
 async def logout(
+    response: Response,
     current_user: CurrentActiveUser,
 ) -> MessageResponse:
     """
@@ -264,6 +288,9 @@ async def logout(
     """
     # Invalidate refresh token
     await invalidate_refresh_token(current_user.id)
+
+    # Clear HTTP-only cookies
+    clear_auth_cookies(response)
 
     return MessageResponse(message="Successfully logged out")
 
