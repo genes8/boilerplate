@@ -420,6 +420,34 @@ Svaki task je označen sa:
 - [x] Implementirati loading state dok se proverava auth
 - [x] Kreirati `routes/dashboard/index.tsx` kao protected page
 
+#### 1.16 [SEQ] HTTP-only Cookie Authentication
+**Estimated:** 3h  
+**Dependencies:** 1.5, 1.10  
+**Assignee:** _____________
+
+- [x] Backend: Kreirati `app/core/cookies.py`:
+  - `set_auth_cookies(response, access_token, refresh_token)`
+  - `clear_auth_cookies(response)`
+- [x] Backend: Dodati cookie settings u `config.py`:
+  - COOKIE_DOMAIN, COOKIE_SECURE, COOKIE_SAMESITE
+- [x] Backend: Ažurirati `api/deps.py`:
+  - Čita token iz cookies ili Authorization header
+  - `get_token_from_request()` helper
+- [x] Backend: Ažurirati auth endpoints:
+  - `/login` - Postavlja HTTP-only cookies
+  - `/refresh` - Čita/Postavlja cookies
+  - `/logout` - Briše cookies
+- [x] Backend: Ažurirati OIDC callback da postavlja cookies
+- [x] Frontend: Ažurirati `lib/api.ts`:
+  - `credentials: 'include'` za sve requeste
+  - Ukloniti localStorage token storage
+- [x] Frontend: Ažurirati `lib/auth-api.ts`:
+  - Ukloniti tokenStorage dependency
+- [x] Frontend: Ažurirati `lib/auth-context.tsx`:
+  - Ukloniti tokenStorage dependency
+- [x] Dodati cookie settings u `.env.example`
+- [x] Dokumentovati u README.md
+
 ---
 
 ## Phase 2: RBAC (Role-Based Access Control)
